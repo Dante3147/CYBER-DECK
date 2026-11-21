@@ -265,4 +265,7 @@ Leia o arquivo [LICENSE.md](LICENSE.md) completo — disponível em **Português
 
 **Made with 🩸 and ☕ in Night City · © 2026 Adonis (Dante3147)**
 
+[![GitHub](https://img.shields.io/badge/GitHub-Dante3147-39ff14?style=flat-square&logo=github)](https://github.com/Dante3147)
+[![Discord](https://img.shields.io/badge/Discord-dante__3147-7289da?style=flat-square&logo=discord)](https://discord.com/users/dante_3147)
+
 </div>
