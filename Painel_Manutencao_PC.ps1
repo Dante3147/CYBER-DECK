@@ -7,10 +7,13 @@ function # =====================================================================
 # MODULO: VERIFICADOR DE ATUALIZACOES (GitHub)
 # ============================================================================
 $CYBERDECK_VERSION_LOCAL = "36.0"
-$CYBERDECK_REPO_RAW = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
+$CYBERDECK_REPO_RAW      = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
+$CYBERDECK_ZIP_URL       = "https://github.com/Dante3147/CYBER-DECK/archive/refs/heads/main.zip"
+$CYBERDECK_PASTA_RAIZ    = $PSScriptRoot
 
 function Get-RemoteVersion {
     try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $resp = Invoke-WebRequest -Uri $CYBERDECK_REPO_RAW -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
         return ($resp.Content | ConvertFrom-Json)
     } catch {
@@ -20,9 +23,239 @@ function Get-RemoteVersion {
 
 function Compare-Versions {
     param([string]$local, [string]$remote)
-    $l = [version]($local -replace '[^0-9.]','')
-    $r = [version]($remote -replace '[^0-9.]','')
-    return $r.CompareTo($l)   # > 0 = tem update
+    try {
+        $l = [version]($local  -replace '[^0-9.]','')
+        $r = [version]($remote -replace '[^0-9.]','')
+        return $r.CompareTo($l)   # > 0 = tem update
+    } catch { return 0 }
+}
+
+function Show-UpdateChangelog {
+    param($remoto)
+    $versaoRemota = $remoto.version
+    $entrada = $remoto.changelog | Where-Object { $_.version -eq $versaoRemota } | Select-Object -First 1
+    if ($entrada) {
+        Write-Host ""
+        Write-Host "  ================================================================" -ForegroundColor Cyan
+        Write-Host "  NOVIDADES DA v$versaoRemota ($($remoto.release_date)):" -ForegroundColor Cyan
+        Write-Host "  ================================================================" -ForegroundColor Cyan
+        foreach ($linha in $entrada.changes) {
+            Write-Host "    >> $linha" -ForegroundColor White
+        }
+        Write-Host ""
+    }
+}
+
+function Invoke-AutoUpdate {
+    param($remoto)
+
+    $versaoRemota = $remoto.version
+    Clear-Host
+    Show-BootBanner "[AUTO-UPDATE] INSTALANDO ATUALIZACAO v$versaoRemota"
+    Write-Host '  [SONGBIRD // CP2077]: "Iniciando download do novo firmware do repositorio..."' -ForegroundColor Magenta
+    Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Sandevistan ligado. Vamos ser rapidos."' -ForegroundColor Yellow
+    Write-Host ""
+
+    Show-UpdateChangelog -remoto $remoto
+
+    # --- Pasta temporaria para o download ---
+    $tmpDir  = Join-Path $env:TEMP "CyberDeck_Update_$(Get-Random)"
+    $zipTemp = Join-Path $tmpDir "cyberdeck_update.zip"
+    $extDir  = Join-Path $tmpDir "extracted"
+    New-Item -ItemType Directory -Path $tmpDir  -Force | Out-Null
+    New-Item -ItemType Directory -Path $extDir  -Force | Out-Null
+
+    # --- Download com barra de progresso identica ao ADB ---
+    try {
+        Write-Host "  [1/3] Baixando pacote de atualizacao..." -ForegroundColor Cyan
+        Write-Host "  Fonte: $CYBERDECK_ZIP_URL" -ForegroundColor DarkGray
+        Write-Host ""
+
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $req = [System.Net.HttpWebRequest]::Create($CYBERDECK_ZIP_URL)
+        $req.UserAgent = "CyberDeck-OS-AutoUpdate/$CYBERDECK_VERSION_LOCAL"
+        $req.AllowAutoRedirect = $true
+        $req.Timeout = 60000
+
+        $resp      = $req.GetResponse()
+        $totalBytes = [int64]$resp.ContentLength
+        $inStream  = $resp.GetResponseStream()
+        $outStream = [System.IO.File]::Create($zipTemp)
+        $buffer    = New-Object byte[] 65536
+        $downloaded = [int64]0
+        $lastPct   = -1
+        $sw        = [System.Diagnostics.Stopwatch]::StartNew()
+        $lastDrawMs = -200
+        $spin      = @('|','/','-','\')
+        $spinIdx   = 0
+
+        if ($totalBytes -gt 0) {
+            $totMB = [math]::Round($totalBytes / 1MB, 2)
+            Write-Host ("`r  [--------------------]   0% | 0.00 / {0:N2} MB | Iniciando..." -f $totMB) -NoNewline -ForegroundColor Cyan
+        }
+
+        while (($read = $inStream.Read($buffer, 0, $buffer.Length)) -gt 0) {
+            $outStream.Write($buffer, 0, $read)
+            $downloaded += $read
+            $elapsedMs  = $sw.ElapsedMilliseconds
+
+            if ($totalBytes -gt 0) {
+                $pct = [int][math]::Floor(($downloaded * 100.0) / $totalBytes)
+                if ($pct -gt 100) { $pct = 100 }
+                if (($pct -ne $lastPct) -or (($elapsedMs - $lastDrawMs) -ge 150)) {
+                    $lastPct    = $pct
+                    $lastDrawMs = $elapsedMs
+                    $filled = [int][math]::Floor($pct / 5)
+                    if ($filled -gt 20) { $filled = 20 }
+                    $bar    = ("#" * $filled) + ("-" * (20 - $filled))
+                    $dlMB   = $downloaded / 1MB
+                    $totMB  = $totalBytes / 1MB
+                    $secs   = [math]::Max(0.1, $sw.Elapsed.TotalSeconds)
+                    $spdMB  = ($downloaded / 1MB) / $secs
+                    $spdStr = if ($spdMB -ge 1) { "{0:N2} MB/s" -f $spdMB } else { "{0:N0} KB/s" -f (($downloaded / 1KB) / $secs) }
+                    Write-Host ("`r  [{0}] {1,3}% | {2:N2} / {3:N2} MB | {4}        " -f $bar, $pct, $dlMB, $totMB, $spdStr) -NoNewline -ForegroundColor Cyan
+                }
+            } else {
+                if (($elapsedMs - $lastDrawMs) -ge 200) {
+                    $lastDrawMs = $elapsedMs
+                    $sp     = $spin[$spinIdx % $spin.Length]; $spinIdx++
+                    $dlMB   = $downloaded / 1MB
+                    $secs   = [math]::Max(0.1, $sw.Elapsed.TotalSeconds)
+                    $spdStr = "{0:N0} KB/s" -f (($downloaded / 1KB) / $secs)
+                    Write-Host ("`r  [{0}] Baixando... {1:N2} MB recebidos | {2}        " -f $sp, $dlMB, $spdStr) -NoNewline -ForegroundColor Cyan
+                }
+            }
+        }
+        $sw.Stop()
+        $finalMB = $downloaded / 1MB
+        if ($totalBytes -gt 0) {
+            Write-Host ("`r  [####################] 100% | {0:N2} / {0:N2} MB | Concluido!           " -f $finalMB) -ForegroundColor Green
+        } else {
+            Write-Host ("`r  [OK] Download concluido! Total: {0:N2} MB                     " -f $finalMB) -ForegroundColor Green
+        }
+        $outStream.Close(); $outStream.Dispose()
+        $inStream.Close();  $inStream.Dispose()
+        $resp.Close()
+
+    } catch {
+        Write-Host "`n  [ERRO] Falha no download: $_" -ForegroundColor Red
+        Write-Host '  [JOHNNY SILVERHAND]: "Sem conexao ou GitHub fora do ar. Tenta mais tarde."' -ForegroundColor Yellow
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+        Pause-Cyber
+        return
+    }
+
+    # --- Extrair ZIP ---
+    Write-Host ""
+    Write-Host "  [2/3] Extraindo arquivos..." -ForegroundColor Cyan
+    try {
+        $oldPref = $ProgressPreference
+        $ProgressPreference = 'SilentlyContinue'
+        Expand-Archive -Path $zipTemp -DestinationPath $extDir -Force
+        $ProgressPreference = $oldPref
+        Write-Host "  [OK] Extracao concluida." -ForegroundColor Green
+    } catch {
+        Write-Host "  [ERRO] Falha na extracao: $_" -ForegroundColor Red
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+        Pause-Cyber
+        return
+    }
+
+    # --- Copiar arquivos atualizados (protegendo pastas pessoais) ---
+    Write-Host ""
+    Write-Host "  [3/3] Aplicando atualizacao sobre a pasta atual..." -ForegroundColor Cyan
+
+    # O GitHub extrai como "CYBER-DECK-main\" dentro do ZIP
+    $extracted = Get-ChildItem -Path $extDir -Directory | Select-Object -First 1
+    if (-not $extracted) {
+        Write-Host "  [ERRO] Estrutura de pastas inesperada no ZIP." -ForegroundColor Red
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+        Pause-Cyber
+        return
+    }
+
+    # Pastas/arquivos pessoais que NAO devem ser sobrescritos
+    $protegidos = @('DADOS', 'ADB ANDROID', 'LIBIMOBILEDEVICE IPHONE', 'VERACRYPT PORTATIL')
+
+    $arquivosNovos = Get-ChildItem -Path $extracted.FullName -Recurse | Where-Object { -not $_.PSIsContainer }
+    $copiados = 0
+
+    foreach ($arq in $arquivosNovos) {
+        $rel  = $arq.FullName.Substring($extracted.FullName.Length + 1)
+        $prot = $false
+        foreach ($p in $protegidos) {
+            if ($rel -like "$p*") { $prot = $true; break }
+        }
+        if ($prot) { continue }
+
+        $destino = Join-Path $CYBERDECK_PASTA_RAIZ $rel
+        $pastaDestino = Split-Path $destino -Parent
+        if (-not (Test-Path $pastaDestino)) { New-Item -ItemType Directory -Path $pastaDestino -Force | Out-Null }
+
+        try {
+            Copy-Item -Path $arq.FullName -Destination $destino -Force
+            $copiados++
+        } catch {
+            Write-Host "  [AVISO] Nao foi possivel copiar: $rel" -ForegroundColor Yellow
+        }
+    }
+
+    Write-Host "  [OK] $copiados arquivo(s) atualizados com sucesso." -ForegroundColor Green
+
+    # --- Limpeza do temporario ---
+    Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-Host ""
+    Write-Host "  ================================================================" -ForegroundColor Green
+    Write-Host "  CYBERDECK OS v$versaoRemota INSTALADO COM SUCESSO!" -ForegroundColor Green
+    Write-Host "  ================================================================" -ForegroundColor Green
+    Write-Host '  [LUCY // Edgerunners]: "Tudo limpo. Reiniciando o painel com o novo firmware..."' -ForegroundColor Cyan
+    Write-Host '  [VIKTOR VEKTOR // CP2077]: "Implantes instalados. Reabra o script para usar a nova versao."' -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  O script sera relancado automaticamente em 5 segundos..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 5
+
+    # --- Relancar o script atualizado ---
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    exit
+}
+
+function Invoke-CheckUpdateOnBoot {
+    # Checagem silenciosa - nao bloqueia o boot se offline
+    $remoto = $null
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $wr = Invoke-WebRequest -Uri $CYBERDECK_REPO_RAW -UseBasicParsing -TimeoutSec 6 -ErrorAction Stop
+        $remoto = $wr.Content | ConvertFrom-Json
+    } catch { return }  # sem internet = ignora silenciosamente
+
+    if ($null -eq $remoto) { return }
+
+    $cmp = Compare-Versions -local $CYBERDECK_VERSION_LOCAL -remote $remoto.version
+    if ($cmp -le 0) { return }  # sem update = continua normal
+
+    # --- Ha atualizacao! Exibe notificacao no boot ---
+    Clear-Host
+    Write-Host "========================================================================" -ForegroundColor Magenta
+    Write-Host "  [!! ATUALIZACAO DISPONIVEL !!]  CYBERDECK OS v$($remoto.version)" -ForegroundColor Green
+    Write-Host "  Versao atual: v$CYBERDECK_VERSION_LOCAL  >>  Nova versao: v$($remoto.version)  ($($remoto.release_date))" -ForegroundColor Cyan
+    Write-Host "========================================================================" -ForegroundColor Magenta
+    Write-Host '  [SONGBIRD // CP2077]: "Novo firmware detectado no repositorio. Deseja instalar agora?"' -ForegroundColor Magenta
+    Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Sera rapido. Download automatico com barra de progresso."' -ForegroundColor Yellow
+    Write-Host ""
+
+    Show-UpdateChangelog -remoto $remoto
+
+    Write-Host "  [S] Instalar agora (download automatico)   [N] Pular por agora" -ForegroundColor Cyan
+    $resp = (Read-Host "  Sua escolha [S/N]").Trim().ToUpper()
+
+    if ($resp -eq "S") {
+        Invoke-AutoUpdate -remoto $remoto
+    } else {
+        Write-Host ""
+        Write-Host '  [JOHNNY SILVERHAND]: "Tudo bem. Voce pode atualizar a qualquer momento pelo menu UPD."' -ForegroundColor Yellow
+        Start-Sleep -Seconds 2
+    }
 }
 
 function Invoke-BuscarAtualizacao {
@@ -52,26 +285,16 @@ function Invoke-BuscarAtualizacao {
         Write-Host "  ========================================================" -ForegroundColor Green
         Write-Host "  [ATUALIZACAO DISPONIVEL!] v$versaoRemota ($dataRemota)" -ForegroundColor Green
         Write-Host "  ========================================================" -ForegroundColor Green
-        Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Novo firmware disponivel. Hora de instalar, choom!"' -ForegroundColor Yellow
-        Write-Host ""
+        Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Novo firmware disponivel!"' -ForegroundColor Yellow
 
-        # Mostra o changelog da versao mais recente
-        $entrada = $remoto.changelog | Where-Object { $_.version -eq $versaoRemota } | Select-Object -First 1
-        if ($entrada) {
-            Write-Host "  O QUE HA DE NOVO NA v$versaoRemota :" -ForegroundColor Cyan
-            foreach ($linha in $entrada.changes) {
-                Write-Host "    >> $linha" -ForegroundColor White
-            }
-        }
+        Show-UpdateChangelog -remoto $remoto
 
-        Write-Host ""
-        Write-Host "  Como atualizar:" -ForegroundColor Cyan
-        Write-Host "    1) Acesse: https://github.com/Dante3147/CYBER-DECK" -ForegroundColor White
-        Write-Host "    2) Clique em [Code] > [Download ZIP]" -ForegroundColor White
-        Write-Host "    3) Extraia sobre a pasta atual substituindo os arquivos" -ForegroundColor White
-        Write-Host ""
-        $abrirGit = Read-Host "  Deseja abrir o repositorio no navegador agora? [S/N]"
-        if ($abrirGit.Trim().ToUpper() -eq "S") {
+        Write-Host "  [S] Instalar agora (download automatico)   [N] Apenas ver no GitHub" -ForegroundColor Cyan
+        $resp = (Read-Host "  Sua escolha [S/N]").Trim().ToUpper()
+
+        if ($resp -eq "S") {
+            Invoke-AutoUpdate -remoto $remoto
+        } else {
             Start-Process "https://github.com/Dante3147/CYBER-DECK"
         }
     } elseif ($cmp -eq 0) {
@@ -79,12 +302,12 @@ function Invoke-BuscarAtualizacao {
         Write-Host "  [OK] Voce ja possui a versao mais recente: v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Green
         Write-Host "  ========================================================" -ForegroundColor Green
         Write-Host '  [LUCY // Edgerunners]: "Tudo atualizado. Nenhum ICE passou."' -ForegroundColor Cyan
+        Pause-Cyber
     } else {
         Write-Host "  Versao local v$CYBERDECK_VERSION_LOCAL > Remota v$versaoRemota" -ForegroundColor Yellow
-        Write-Host '  [REBECCA // Edgerunners]: "Sua versao e mais nova que a do repositorio. Developer mode!"' -ForegroundColor Magenta
+        Write-Host '  [REBECCA // Edgerunners]: "Sua versao e mais nova. Developer mode!"' -ForegroundColor Magenta
+        Pause-Cyber
     }
-
-    Pause-Cyber
 }
 
 function Invoke-RegistrosAtualizacao {
@@ -3700,10 +3923,13 @@ function Invoke-Op20 {
 # MODULO: VERIFICADOR DE ATUALIZACOES (GitHub)
 # ============================================================================
 $CYBERDECK_VERSION_LOCAL = "36.0"
-$CYBERDECK_REPO_RAW = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
+$CYBERDECK_REPO_RAW      = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
+$CYBERDECK_ZIP_URL       = "https://github.com/Dante3147/CYBER-DECK/archive/refs/heads/main.zip"
+$CYBERDECK_PASTA_RAIZ    = $PSScriptRoot
 
 function Get-RemoteVersion {
     try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $resp = Invoke-WebRequest -Uri $CYBERDECK_REPO_RAW -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
         return ($resp.Content | ConvertFrom-Json)
     } catch {
@@ -3713,9 +3939,239 @@ function Get-RemoteVersion {
 
 function Compare-Versions {
     param([string]$local, [string]$remote)
-    $l = [version]($local -replace '[^0-9.]','')
-    $r = [version]($remote -replace '[^0-9.]','')
-    return $r.CompareTo($l)   # > 0 = tem update
+    try {
+        $l = [version]($local  -replace '[^0-9.]','')
+        $r = [version]($remote -replace '[^0-9.]','')
+        return $r.CompareTo($l)   # > 0 = tem update
+    } catch { return 0 }
+}
+
+function Show-UpdateChangelog {
+    param($remoto)
+    $versaoRemota = $remoto.version
+    $entrada = $remoto.changelog | Where-Object { $_.version -eq $versaoRemota } | Select-Object -First 1
+    if ($entrada) {
+        Write-Host ""
+        Write-Host "  ================================================================" -ForegroundColor Cyan
+        Write-Host "  NOVIDADES DA v$versaoRemota ($($remoto.release_date)):" -ForegroundColor Cyan
+        Write-Host "  ================================================================" -ForegroundColor Cyan
+        foreach ($linha in $entrada.changes) {
+            Write-Host "    >> $linha" -ForegroundColor White
+        }
+        Write-Host ""
+    }
+}
+
+function Invoke-AutoUpdate {
+    param($remoto)
+
+    $versaoRemota = $remoto.version
+    Clear-Host
+    Show-BootBanner "[AUTO-UPDATE] INSTALANDO ATUALIZACAO v$versaoRemota"
+    Write-Host '  [SONGBIRD // CP2077]: "Iniciando download do novo firmware do repositorio..."' -ForegroundColor Magenta
+    Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Sandevistan ligado. Vamos ser rapidos."' -ForegroundColor Yellow
+    Write-Host ""
+
+    Show-UpdateChangelog -remoto $remoto
+
+    # --- Pasta temporaria para o download ---
+    $tmpDir  = Join-Path $env:TEMP "CyberDeck_Update_$(Get-Random)"
+    $zipTemp = Join-Path $tmpDir "cyberdeck_update.zip"
+    $extDir  = Join-Path $tmpDir "extracted"
+    New-Item -ItemType Directory -Path $tmpDir  -Force | Out-Null
+    New-Item -ItemType Directory -Path $extDir  -Force | Out-Null
+
+    # --- Download com barra de progresso identica ao ADB ---
+    try {
+        Write-Host "  [1/3] Baixando pacote de atualizacao..." -ForegroundColor Cyan
+        Write-Host "  Fonte: $CYBERDECK_ZIP_URL" -ForegroundColor DarkGray
+        Write-Host ""
+
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $req = [System.Net.HttpWebRequest]::Create($CYBERDECK_ZIP_URL)
+        $req.UserAgent = "CyberDeck-OS-AutoUpdate/$CYBERDECK_VERSION_LOCAL"
+        $req.AllowAutoRedirect = $true
+        $req.Timeout = 60000
+
+        $resp      = $req.GetResponse()
+        $totalBytes = [int64]$resp.ContentLength
+        $inStream  = $resp.GetResponseStream()
+        $outStream = [System.IO.File]::Create($zipTemp)
+        $buffer    = New-Object byte[] 65536
+        $downloaded = [int64]0
+        $lastPct   = -1
+        $sw        = [System.Diagnostics.Stopwatch]::StartNew()
+        $lastDrawMs = -200
+        $spin      = @('|','/','-','\')
+        $spinIdx   = 0
+
+        if ($totalBytes -gt 0) {
+            $totMB = [math]::Round($totalBytes / 1MB, 2)
+            Write-Host ("`r  [--------------------]   0% | 0.00 / {0:N2} MB | Iniciando..." -f $totMB) -NoNewline -ForegroundColor Cyan
+        }
+
+        while (($read = $inStream.Read($buffer, 0, $buffer.Length)) -gt 0) {
+            $outStream.Write($buffer, 0, $read)
+            $downloaded += $read
+            $elapsedMs  = $sw.ElapsedMilliseconds
+
+            if ($totalBytes -gt 0) {
+                $pct = [int][math]::Floor(($downloaded * 100.0) / $totalBytes)
+                if ($pct -gt 100) { $pct = 100 }
+                if (($pct -ne $lastPct) -or (($elapsedMs - $lastDrawMs) -ge 150)) {
+                    $lastPct    = $pct
+                    $lastDrawMs = $elapsedMs
+                    $filled = [int][math]::Floor($pct / 5)
+                    if ($filled -gt 20) { $filled = 20 }
+                    $bar    = ("#" * $filled) + ("-" * (20 - $filled))
+                    $dlMB   = $downloaded / 1MB
+                    $totMB  = $totalBytes / 1MB
+                    $secs   = [math]::Max(0.1, $sw.Elapsed.TotalSeconds)
+                    $spdMB  = ($downloaded / 1MB) / $secs
+                    $spdStr = if ($spdMB -ge 1) { "{0:N2} MB/s" -f $spdMB } else { "{0:N0} KB/s" -f (($downloaded / 1KB) / $secs) }
+                    Write-Host ("`r  [{0}] {1,3}% | {2:N2} / {3:N2} MB | {4}        " -f $bar, $pct, $dlMB, $totMB, $spdStr) -NoNewline -ForegroundColor Cyan
+                }
+            } else {
+                if (($elapsedMs - $lastDrawMs) -ge 200) {
+                    $lastDrawMs = $elapsedMs
+                    $sp     = $spin[$spinIdx % $spin.Length]; $spinIdx++
+                    $dlMB   = $downloaded / 1MB
+                    $secs   = [math]::Max(0.1, $sw.Elapsed.TotalSeconds)
+                    $spdStr = "{0:N0} KB/s" -f (($downloaded / 1KB) / $secs)
+                    Write-Host ("`r  [{0}] Baixando... {1:N2} MB recebidos | {2}        " -f $sp, $dlMB, $spdStr) -NoNewline -ForegroundColor Cyan
+                }
+            }
+        }
+        $sw.Stop()
+        $finalMB = $downloaded / 1MB
+        if ($totalBytes -gt 0) {
+            Write-Host ("`r  [####################] 100% | {0:N2} / {0:N2} MB | Concluido!           " -f $finalMB) -ForegroundColor Green
+        } else {
+            Write-Host ("`r  [OK] Download concluido! Total: {0:N2} MB                     " -f $finalMB) -ForegroundColor Green
+        }
+        $outStream.Close(); $outStream.Dispose()
+        $inStream.Close();  $inStream.Dispose()
+        $resp.Close()
+
+    } catch {
+        Write-Host "`n  [ERRO] Falha no download: $_" -ForegroundColor Red
+        Write-Host '  [JOHNNY SILVERHAND]: "Sem conexao ou GitHub fora do ar. Tenta mais tarde."' -ForegroundColor Yellow
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+        Pause-Cyber
+        return
+    }
+
+    # --- Extrair ZIP ---
+    Write-Host ""
+    Write-Host "  [2/3] Extraindo arquivos..." -ForegroundColor Cyan
+    try {
+        $oldPref = $ProgressPreference
+        $ProgressPreference = 'SilentlyContinue'
+        Expand-Archive -Path $zipTemp -DestinationPath $extDir -Force
+        $ProgressPreference = $oldPref
+        Write-Host "  [OK] Extracao concluida." -ForegroundColor Green
+    } catch {
+        Write-Host "  [ERRO] Falha na extracao: $_" -ForegroundColor Red
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+        Pause-Cyber
+        return
+    }
+
+    # --- Copiar arquivos atualizados (protegendo pastas pessoais) ---
+    Write-Host ""
+    Write-Host "  [3/3] Aplicando atualizacao sobre a pasta atual..." -ForegroundColor Cyan
+
+    # O GitHub extrai como "CYBER-DECK-main\" dentro do ZIP
+    $extracted = Get-ChildItem -Path $extDir -Directory | Select-Object -First 1
+    if (-not $extracted) {
+        Write-Host "  [ERRO] Estrutura de pastas inesperada no ZIP." -ForegroundColor Red
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue }
+        Pause-Cyber
+        return
+    }
+
+    # Pastas/arquivos pessoais que NAO devem ser sobrescritos
+    $protegidos = @('DADOS', 'ADB ANDROID', 'LIBIMOBILEDEVICE IPHONE', 'VERACRYPT PORTATIL')
+
+    $arquivosNovos = Get-ChildItem -Path $extracted.FullName -Recurse | Where-Object { -not $_.PSIsContainer }
+    $copiados = 0
+
+    foreach ($arq in $arquivosNovos) {
+        $rel  = $arq.FullName.Substring($extracted.FullName.Length + 1)
+        $prot = $false
+        foreach ($p in $protegidos) {
+            if ($rel -like "$p*") { $prot = $true; break }
+        }
+        if ($prot) { continue }
+
+        $destino = Join-Path $CYBERDECK_PASTA_RAIZ $rel
+        $pastaDestino = Split-Path $destino -Parent
+        if (-not (Test-Path $pastaDestino)) { New-Item -ItemType Directory -Path $pastaDestino -Force | Out-Null }
+
+        try {
+            Copy-Item -Path $arq.FullName -Destination $destino -Force
+            $copiados++
+        } catch {
+            Write-Host "  [AVISO] Nao foi possivel copiar: $rel" -ForegroundColor Yellow
+        }
+    }
+
+    Write-Host "  [OK] $copiados arquivo(s) atualizados com sucesso." -ForegroundColor Green
+
+    # --- Limpeza do temporario ---
+    Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-Host ""
+    Write-Host "  ================================================================" -ForegroundColor Green
+    Write-Host "  CYBERDECK OS v$versaoRemota INSTALADO COM SUCESSO!" -ForegroundColor Green
+    Write-Host "  ================================================================" -ForegroundColor Green
+    Write-Host '  [LUCY // Edgerunners]: "Tudo limpo. Reiniciando o painel com o novo firmware..."' -ForegroundColor Cyan
+    Write-Host '  [VIKTOR VEKTOR // CP2077]: "Implantes instalados. Reabra o script para usar a nova versao."' -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  O script sera relancado automaticamente em 5 segundos..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 5
+
+    # --- Relancar o script atualizado ---
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    exit
+}
+
+function Invoke-CheckUpdateOnBoot {
+    # Checagem silenciosa - nao bloqueia o boot se offline
+    $remoto = $null
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $wr = Invoke-WebRequest -Uri $CYBERDECK_REPO_RAW -UseBasicParsing -TimeoutSec 6 -ErrorAction Stop
+        $remoto = $wr.Content | ConvertFrom-Json
+    } catch { return }  # sem internet = ignora silenciosamente
+
+    if ($null -eq $remoto) { return }
+
+    $cmp = Compare-Versions -local $CYBERDECK_VERSION_LOCAL -remote $remoto.version
+    if ($cmp -le 0) { return }  # sem update = continua normal
+
+    # --- Ha atualizacao! Exibe notificacao no boot ---
+    Clear-Host
+    Write-Host "========================================================================" -ForegroundColor Magenta
+    Write-Host "  [!! ATUALIZACAO DISPONIVEL !!]  CYBERDECK OS v$($remoto.version)" -ForegroundColor Green
+    Write-Host "  Versao atual: v$CYBERDECK_VERSION_LOCAL  >>  Nova versao: v$($remoto.version)  ($($remoto.release_date))" -ForegroundColor Cyan
+    Write-Host "========================================================================" -ForegroundColor Magenta
+    Write-Host '  [SONGBIRD // CP2077]: "Novo firmware detectado no repositorio. Deseja instalar agora?"' -ForegroundColor Magenta
+    Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Sera rapido. Download automatico com barra de progresso."' -ForegroundColor Yellow
+    Write-Host ""
+
+    Show-UpdateChangelog -remoto $remoto
+
+    Write-Host "  [S] Instalar agora (download automatico)   [N] Pular por agora" -ForegroundColor Cyan
+    $resp = (Read-Host "  Sua escolha [S/N]").Trim().ToUpper()
+
+    if ($resp -eq "S") {
+        Invoke-AutoUpdate -remoto $remoto
+    } else {
+        Write-Host ""
+        Write-Host '  [JOHNNY SILVERHAND]: "Tudo bem. Voce pode atualizar a qualquer momento pelo menu UPD."' -ForegroundColor Yellow
+        Start-Sleep -Seconds 2
+    }
 }
 
 function Invoke-BuscarAtualizacao {
@@ -3745,26 +4201,16 @@ function Invoke-BuscarAtualizacao {
         Write-Host "  ========================================================" -ForegroundColor Green
         Write-Host "  [ATUALIZACAO DISPONIVEL!] v$versaoRemota ($dataRemota)" -ForegroundColor Green
         Write-Host "  ========================================================" -ForegroundColor Green
-        Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Novo firmware disponivel. Hora de instalar, choom!"' -ForegroundColor Yellow
-        Write-Host ""
+        Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Novo firmware disponivel!"' -ForegroundColor Yellow
 
-        # Mostra o changelog da versao mais recente
-        $entrada = $remoto.changelog | Where-Object { $_.version -eq $versaoRemota } | Select-Object -First 1
-        if ($entrada) {
-            Write-Host "  O QUE HA DE NOVO NA v$versaoRemota :" -ForegroundColor Cyan
-            foreach ($linha in $entrada.changes) {
-                Write-Host "    >> $linha" -ForegroundColor White
-            }
-        }
+        Show-UpdateChangelog -remoto $remoto
 
-        Write-Host ""
-        Write-Host "  Como atualizar:" -ForegroundColor Cyan
-        Write-Host "    1) Acesse: https://github.com/Dante3147/CYBER-DECK" -ForegroundColor White
-        Write-Host "    2) Clique em [Code] > [Download ZIP]" -ForegroundColor White
-        Write-Host "    3) Extraia sobre a pasta atual substituindo os arquivos" -ForegroundColor White
-        Write-Host ""
-        $abrirGit = Read-Host "  Deseja abrir o repositorio no navegador agora? [S/N]"
-        if ($abrirGit.Trim().ToUpper() -eq "S") {
+        Write-Host "  [S] Instalar agora (download automatico)   [N] Apenas ver no GitHub" -ForegroundColor Cyan
+        $resp = (Read-Host "  Sua escolha [S/N]").Trim().ToUpper()
+
+        if ($resp -eq "S") {
+            Invoke-AutoUpdate -remoto $remoto
+        } else {
             Start-Process "https://github.com/Dante3147/CYBER-DECK"
         }
     } elseif ($cmp -eq 0) {
@@ -3772,12 +4218,12 @@ function Invoke-BuscarAtualizacao {
         Write-Host "  [OK] Voce ja possui a versao mais recente: v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Green
         Write-Host "  ========================================================" -ForegroundColor Green
         Write-Host '  [LUCY // Edgerunners]: "Tudo atualizado. Nenhum ICE passou."' -ForegroundColor Cyan
+        Pause-Cyber
     } else {
         Write-Host "  Versao local v$CYBERDECK_VERSION_LOCAL > Remota v$versaoRemota" -ForegroundColor Yellow
-        Write-Host '  [REBECCA // Edgerunners]: "Sua versao e mais nova que a do repositorio. Developer mode!"' -ForegroundColor Magenta
+        Write-Host '  [REBECCA // Edgerunners]: "Sua versao e mais nova. Developer mode!"' -ForegroundColor Magenta
+        Pause-Cyber
     }
-
-    Pause-Cyber
 }
 
 function Invoke-RegistrosAtualizacao {
@@ -3850,6 +4296,7 @@ function Select-Corporation {
 }
 
 Register-MobileExitCleanup
+Invoke-CheckUpdateOnBoot
 $tema = Select-Corporation
 
 while ($true) {
