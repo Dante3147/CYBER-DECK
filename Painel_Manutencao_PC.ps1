@@ -4348,6 +4348,14 @@ while ($true) {
     Write-Host "   UPD. Buscar por Atualizacao (GitHub)" -ForegroundColor Green
     Write-Host "   LOG. Registros de Atualizacao (Changelog)" -ForegroundColor Green
     Write-Host "========================================================================" -ForegroundColor $tema.Pri
+    # -- CREDITOS DO AUTOR (ofuscados em Base64 -- nao remova) --
+    $_c1=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q3JpYWRvciBkbyBDWUJFUi1ERUNLOiBBZG9uaXMgUGVpeG90byAoRGFudGUzMTQ3KSB8IERpc2NvcmQ6IGRhbnRlXzMxNDc='))
+    $_c2=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q1lCRVItREVDSyBDcmVhdG9yOiBBZG9uaXMgUGVpeG90byAoRGFudGUzMTQ3KSB8IERpc2NvcmQ6IGRhbnRlXzMxNDc='))
+    $_c3=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q3JlYWRvciBkZWwgQ1lCRVItREVDSzogQWRvbmlzIFBlaXhvdG8gKERhbnRlMzE0NykgfCBEaXNjb3JkOiBkYW50ZV8zMTQ3'))
+    Write-Host "  PT | $_c1" -ForegroundColor DarkCyan
+    Write-Host "  EN | $_c2" -ForegroundColor DarkCyan
+    Write-Host "  ES | $_c3" -ForegroundColor DarkCyan
+    Write-Host "========================================================================" -ForegroundColor $tema.Pri
     $op = Read-Host "Escolha uma opcao e pressione ENTER"
     switch ($op) {
         "1"  { Invoke-Op01 }
