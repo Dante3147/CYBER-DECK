@@ -3,7 +3,7 @@
 # ============================================================================
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-function # ============================================================================
+# ============================================================================
 # MODULO: VERIFICADOR DE ATUALIZACOES (GitHub)
 # ============================================================================
 $CYBERDECK_VERSION_LOCAL = "36.0"
@@ -350,7 +350,7 @@ function Invoke-RegistrosAtualizacao {
     Pause-Cyber
 }
 
-Assert-Admin {
+function Assert-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
         Clear-Host
