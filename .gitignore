@@ -1,29 +1,137 @@
 # ============================================================
 # CYBER-DECK .gitignore
-# Exclui dados pessoais, backups e ferramentas portáteis binárias
+# Protege dados pessoais, binários e arquivos sensíveis
 # ============================================================
 
-# Pasta de dados/backups datados (contém chaves BitLocker pessoais!)
+
+# ------------------------------------------------------------
+# DADOS PESSOAIS E BACKUPS (nunca commitar)
+# ------------------------------------------------------------
+
+# Pasta principal de backups datados (contém chaves BitLocker!)
 DADOS/
 
-# Ferramentas portáteis baixadas automaticamente (não commitar binários)
+# Chaves de recuperação BitLocker onde quer que estejam
+CHAVES_RECUPERACAO_BITLOCKER/
+*BITLOCKER*.txt
+*RECOVERY_KEY*
+*.key
+*.bek
+
+# Backups de registro (.reg gerados automaticamente)
+BACKUP_LIMPEZA_REGISTRO_ORFAOS/
+RELATORIOS_LIMPEZA_REGISTRO/
+RELATORIOS_HARDWARE/
+BACKUPS-PROGRAMAS/
+BACKUP DADOS NAVEGADORES/
+
+# Exportação de programas instalados
+meus_programas.json
+*_programas.json
+
+# Relatórios de bateria e hardware
+*.html
+
+
+# ------------------------------------------------------------
+# FERRAMENTAS PORTÁTEIS BAIXADAS AUTOMATICAMENTE
+# (binários não devem ficar no repositório)
+# ------------------------------------------------------------
+
+# ADB Android (platform-tools do Google)
 ADB ANDROID/*.exe
 ADB ANDROID/*.dll
+ADB ANDROID/*.so
 ADB ANDROID/platform-tools/
+ADB ANDROID/adb.exe
+ADB ANDROID/fastboot.exe
 
+# libimobiledevice iPhone
 LIBIMOBILEDEVICE IPHONE/*.exe
 LIBIMOBILEDEVICE IPHONE/*.dll
+LIBIMOBILEDEVICE IPHONE/*.lib
 
+# VeraCrypt portátil
 VERACRYPT PORTATIL/*.exe
 VERACRYPT PORTATIL/*.dll
+VERACRYPT PORTATIL/*.sys
 
-# Arquivos temporários do Windows
+# Arquivos ZIP de download temporário
+*.zip
+*.tar.gz
+*.7z
+
+
+# ------------------------------------------------------------
+# ARQUIVOS TEMPORÁRIOS DO WINDOWS
+# ------------------------------------------------------------
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 desktop.ini
-*.tmp
-*.log
+$RECYCLE.BIN/
+*.lnk
 
-# Chaves e dados sensíveis (segurança)
+# Arquivos temporários gerais
+*.tmp
+*.temp
+~$*
+
+
+# ------------------------------------------------------------
+# LOGS E DEPURAÇÃO
+# ------------------------------------------------------------
+*.log
+*.log.*
+logs/
+*.bak
 *.txt.bak
-CHAVES_RECUPERACAO_BITLOCKER/
-*.key
+*.old
+
+
+# ------------------------------------------------------------
+# SENHAS E DADOS SENSÍVEIS
+# ------------------------------------------------------------
+*senha*
+*password*
+*senhas*
+*credentials*
+*secrets*
+*.csv
+
+
+# ------------------------------------------------------------
+# EDITORES E IDEs
+# ------------------------------------------------------------
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+*.iml
+
+# Notepad++
+nppBackup/
+
+# PowerShell ISE
+*.ps1xml
+
+
+# ------------------------------------------------------------
+# SISTEMA OPERACIONAL
+# ------------------------------------------------------------
+
+# Windows
+[Dd]esktop.ini
+[Tt]humbs.db
+*.stackdump
+
+# macOS (caso alguém abra o projeto num Mac)
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
