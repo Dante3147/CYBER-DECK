@@ -210,11 +210,22 @@ function Invoke-AutoUpdate {
     Write-Host "  ================================================================" -ForegroundColor Green
     Write-Host "  CYBERDECK OS v$versaoRemota INSTALADO COM SUCESSO!" -ForegroundColor Green
     Write-Host "  ================================================================" -ForegroundColor Green
-    Write-Host '  [LUCY // Edgerunners]: "Firmware atualizado. Reiniciando o CyberDeck em 5 segundos..."' -ForegroundColor Cyan
+    Write-Host '  [VIKTOR VEKTOR // CP2077]: "Todos os scripts (.bat e .ps1) foram atualizados com sucesso."' -ForegroundColor Green
     Write-Host ""
-    Start-Sleep -Seconds 5
-
-    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    Write-Host "  Como deseja prosseguir?" -ForegroundColor White
+    Write-Host "    [1] Abrir Painel PowerShell" -ForegroundColor Cyan
+    Write-Host "    [2] Abrir Painel CMD (.bat)" -ForegroundColor Yellow
+    Write-Host "    [0] Concluir e sair (ou pressione ENTER)" -ForegroundColor DarkGray
+    Write-Host ""
+    $posUpdate = (Read-Host "  Escolha [1, 2 ou 0]").Trim()
+    if ($posUpdate -eq "1") {
+        $launcherPS = Join-Path $CYBERDECK_PASTA_RAIZ "Iniciar_Painel_PowerShell.bat"
+        if (Test-Path $launcherPS) { Start-Process $launcherPS }
+        else { Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" }
+    } elseif ($posUpdate -eq "2") {
+        $launcherBAT = Join-Path $CYBERDECK_PASTA_RAIZ "Painel_Manutencao_PC.bat"
+        if (Test-Path $launcherBAT) { Start-Process $launcherBAT }
+    }
     exit
 }
 
@@ -4106,11 +4117,22 @@ function Invoke-AutoUpdate {
     Write-Host "  ================================================================" -ForegroundColor Green
     Write-Host "  CYBERDECK OS v$versaoRemota INSTALADO COM SUCESSO!" -ForegroundColor Green
     Write-Host "  ================================================================" -ForegroundColor Green
-    Write-Host '  [LUCY // Edgerunners]: "Firmware atualizado. Reiniciando o CyberDeck em 5 segundos..."' -ForegroundColor Cyan
+    Write-Host '  [VIKTOR VEKTOR // CP2077]: "Todos os scripts (.bat e .ps1) foram atualizados com sucesso."' -ForegroundColor Green
     Write-Host ""
-    Start-Sleep -Seconds 5
-
-    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    Write-Host "  Como deseja prosseguir?" -ForegroundColor White
+    Write-Host "    [1] Abrir Painel PowerShell" -ForegroundColor Cyan
+    Write-Host "    [2] Abrir Painel CMD (.bat)" -ForegroundColor Yellow
+    Write-Host "    [0] Concluir e sair (ou pressione ENTER)" -ForegroundColor DarkGray
+    Write-Host ""
+    $posUpdate = (Read-Host "  Escolha [1, 2 ou 0]").Trim()
+    if ($posUpdate -eq "1") {
+        $launcherPS = Join-Path $CYBERDECK_PASTA_RAIZ "Iniciar_Painel_PowerShell.bat"
+        if (Test-Path $launcherPS) { Start-Process $launcherPS }
+        else { Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" }
+    } elseif ($posUpdate -eq "2") {
+        $launcherBAT = Join-Path $CYBERDECK_PASTA_RAIZ "Painel_Manutencao_PC.bat"
+        if (Test-Path $launcherBAT) { Start-Process $launcherBAT }
+    }
     exit
 }
 
