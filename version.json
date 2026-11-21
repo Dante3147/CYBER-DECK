@@ -1,8 +1,15 @@
 {
-  "version": "37.0",
+  "version": "38.0",
   "release_date": "2026-11-21",
   "changelog": [
-    {
+     {
+      "version": "38.0",
+      "date": "2026-11-21",
+      "changes": [
+        "TESTE DE SINCRONIZAÇÃO COM O GITHUB E SCRIPTS E IMPLEMENTAÇÃO DE UPDTADE AO ABRIR E OPÇÃO PARA BUSCAR ATUALIZAÇÃO",
+      ]
+    },
+	{
       "version": "37.0",
       "date": "2026-11-21",
       "changes": [
