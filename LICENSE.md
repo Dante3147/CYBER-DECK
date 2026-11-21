@@ -5,7 +5,7 @@
 
 ## 🇧🇷 PORTUGUÊS (Brasil)
 
-**Copyright (c) 2026 Dante3147**
+**Copyright (c) 2026 Adonis (Dante3147)**
 
 Permissão é concedida, gratuitamente, a qualquer pessoa que obtenha uma cópia deste software e dos arquivos de documentação associados (o **"Projeto"**), para utilizar, copiar, modificar, fundir, publicar e distribuir cópias do Projeto, sujeito às seguintes condições obrigatórias:
 
@@ -32,7 +32,7 @@ O uso deste Projeto é de **inteira responsabilidade do usuário final**. Qualqu
 
 ## 🇺🇸 ENGLISH
 
-**Copyright (c) 2026 Dante3147**
+**Copyright (c) 2026 Adonis (Dante3147)**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the **"Project"**), to use, copy, modify, merge, publish, and distribute copies of the Project, subject to the following mandatory conditions:
 
@@ -59,7 +59,7 @@ The use of this Project is the **sole responsibility of the end user**. Any use 
 
 ## 🇪🇸 ESPAÑOL
 
-**Copyright (c) 2026 Dante3147**
+**Copyright (c) 2026 Adonis (Dante3147)**
 
 Se concede permiso, de forma gratuita, a cualquier persona que obtenga una copia de este software y los archivos de documentación asociados (el **"Proyecto"**), para usar, copiar, modificar, fusionar, publicar y distribuir copias del Proyecto, sujeto a las siguientes condiciones obligatorias:
 

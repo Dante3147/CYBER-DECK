@@ -263,6 +263,6 @@ Leia o arquivo [LICENSE.md](LICENSE.md) completo — disponível em **Português
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
-**Made with 🩸 and ☕ in Night City · © 2026 Dante3147**
+**Made with 🩸 and ☕ in Night City · © 2026 Adonis (Dante3147)**
 
 </div>
