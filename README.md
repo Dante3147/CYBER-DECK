@@ -150,6 +150,19 @@ Tudo o que você precisa para blindar, limpar, otimizar e fazer backup do seu si
 
 ---
 
+### 🚀 `[ATUALIZAÇÕES DO CYBERDECK]`
+
+| Nº | Função | Descrição |
+|---|---|---|
+| `21` | **Central de Atualizações (GitHub)** | Verificação automática no boot, download com barra de progresso (%) e histórico completo de alterações |
+
+#### Sub-menu da Opção 21:
+- `[1]` **Baixar e Instalar Atualização** — download via GitHub com porcentagem real, extração automática e reinício do script
+- `[2]` **Ver o que foi alterado (Changelog)** — histórico completo de todas as novidades desde a versão inicial
+- `[0]` **Voltar ao Menu Principal**
+
+---
+
 ### ⚙️ `[ATALHOS DE ROTINA]`
 
 | Código | Função |
