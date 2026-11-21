@@ -3,7 +3,131 @@
 # ============================================================================
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-function Assert-Admin {
+function # ============================================================================
+# MODULO: VERIFICADOR DE ATUALIZACOES (GitHub)
+# ============================================================================
+$CYBERDECK_VERSION_LOCAL = "36.0"
+$CYBERDECK_REPO_RAW = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
+
+function Get-RemoteVersion {
+    try {
+        $resp = Invoke-WebRequest -Uri $CYBERDECK_REPO_RAW -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        return ($resp.Content | ConvertFrom-Json)
+    } catch {
+        return $null
+    }
+}
+
+function Compare-Versions {
+    param([string]$local, [string]$remote)
+    $l = [version]($local -replace '[^0-9.]','')
+    $r = [version]($remote -replace '[^0-9.]','')
+    return $r.CompareTo($l)   # > 0 = tem update
+}
+
+function Invoke-BuscarAtualizacao {
+    Clear-Host
+    Show-BootBanner "[UPD] CONEXAO COM O SERVIDOR DE ATUALIZACOES (GITHUB)"
+    Write-Host '  [SONGBIRD // CP2077]: "Estabelecendo link seguro com o repositorio remoto..."' -ForegroundColor Magenta
+    Write-Host '  [ALT CUNNINGHAM // CP2077]: "Escaneando versao mais recente alem da Blackwall..."' -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  Versao local instalada : v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Cyan
+    Write-Host "  Consultando            : $CYBERDECK_REPO_RAW" -ForegroundColor DarkGray
+    Write-Host ""
+
+    $remoto = Get-RemoteVersion
+
+    if ($null -eq $remoto) {
+        Write-Host "  [ERRO DE REDE] Nao foi possivel conectar ao repositorio." -ForegroundColor Red
+        Write-Host '  [JOHNNY SILVERHAND]: "Sem internet ou repositorio offline. Tenta de novo mais tarde."' -ForegroundColor Yellow
+        Pause-Cyber
+        return
+    }
+
+    $versaoRemota = $remoto.version
+    $dataRemota   = $remoto.release_date
+    $cmp = Compare-Versions -local $CYBERDECK_VERSION_LOCAL -remote $versaoRemota
+
+    if ($cmp -gt 0) {
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host "  [ATUALIZACAO DISPONIVEL!] v$versaoRemota ($dataRemota)" -ForegroundColor Green
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Novo firmware disponivel. Hora de instalar, choom!"' -ForegroundColor Yellow
+        Write-Host ""
+
+        # Mostra o changelog da versao mais recente
+        $entrada = $remoto.changelog | Where-Object { $_.version -eq $versaoRemota } | Select-Object -First 1
+        if ($entrada) {
+            Write-Host "  O QUE HA DE NOVO NA v$versaoRemota :" -ForegroundColor Cyan
+            foreach ($linha in $entrada.changes) {
+                Write-Host "    >> $linha" -ForegroundColor White
+            }
+        }
+
+        Write-Host ""
+        Write-Host "  Como atualizar:" -ForegroundColor Cyan
+        Write-Host "    1) Acesse: https://github.com/Dante3147/CYBER-DECK" -ForegroundColor White
+        Write-Host "    2) Clique em [Code] > [Download ZIP]" -ForegroundColor White
+        Write-Host "    3) Extraia sobre a pasta atual substituindo os arquivos" -ForegroundColor White
+        Write-Host ""
+        $abrirGit = Read-Host "  Deseja abrir o repositorio no navegador agora? [S/N]"
+        if ($abrirGit.Trim().ToUpper() -eq "S") {
+            Start-Process "https://github.com/Dante3147/CYBER-DECK"
+        }
+    } elseif ($cmp -eq 0) {
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host "  [OK] Voce ja possui a versao mais recente: v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Green
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host '  [LUCY // Edgerunners]: "Tudo atualizado. Nenhum ICE passou."' -ForegroundColor Cyan
+    } else {
+        Write-Host "  Versao local v$CYBERDECK_VERSION_LOCAL > Remota v$versaoRemota" -ForegroundColor Yellow
+        Write-Host '  [REBECCA // Edgerunners]: "Sua versao e mais nova que a do repositorio. Developer mode!"' -ForegroundColor Magenta
+    }
+
+    Pause-Cyber
+}
+
+function Invoke-RegistrosAtualizacao {
+    Clear-Host
+    Show-BootBanner "[LOG] REGISTROS DE ATUALIZACAO // CHANGELOG COMPLETO"
+    Write-Host '  [VIKTOR VEKTOR // CP2077]: "Aqui estao todos os implantes e melhorias desde o inicio."' -ForegroundColor Green
+    Write-Host ""
+
+    $remoto = Get-RemoteVersion
+
+    if ($null -eq $remoto) {
+        Write-Host "  [AVISO] Sem conexao com GitHub. Exibindo apenas versao local." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  Versao local: v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Cyan
+        Write-Host '  [SONGBIRD]: "Conecte a internet para ver o changelog completo do repositorio."' -ForegroundColor Magenta
+        Pause-Cyber
+        return
+    }
+
+    Write-Host "  Versao local  : v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Cyan
+    Write-Host "  Versao remota : v$($remoto.version) ($($remoto.release_date))" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+    Write-Host "  HISTORICO COMPLETO DE VERSOES" -ForegroundColor Yellow
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+
+    foreach ($entrada in $remoto.changelog) {
+        Write-Host ""
+        Write-Host "  [ v$($entrada.version) ]  $($entrada.date)" -ForegroundColor Cyan
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
+        foreach ($linha in $entrada.changes) {
+            Write-Host "    + $linha" -ForegroundColor White
+        }
+    }
+
+    Write-Host ""
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+    Write-Host "  Repositorio oficial: https://github.com/Dante3147/CYBER-DECK" -ForegroundColor DarkGray
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+    Pause-Cyber
+}
+
+Assert-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
         Clear-Host
@@ -3572,6 +3696,130 @@ function Invoke-Op20 {
     }
 }
 
+# ============================================================================
+# MODULO: VERIFICADOR DE ATUALIZACOES (GitHub)
+# ============================================================================
+$CYBERDECK_VERSION_LOCAL = "36.0"
+$CYBERDECK_REPO_RAW = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
+
+function Get-RemoteVersion {
+    try {
+        $resp = Invoke-WebRequest -Uri $CYBERDECK_REPO_RAW -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        return ($resp.Content | ConvertFrom-Json)
+    } catch {
+        return $null
+    }
+}
+
+function Compare-Versions {
+    param([string]$local, [string]$remote)
+    $l = [version]($local -replace '[^0-9.]','')
+    $r = [version]($remote -replace '[^0-9.]','')
+    return $r.CompareTo($l)   # > 0 = tem update
+}
+
+function Invoke-BuscarAtualizacao {
+    Clear-Host
+    Show-BootBanner "[UPD] CONEXAO COM O SERVIDOR DE ATUALIZACOES (GITHUB)"
+    Write-Host '  [SONGBIRD // CP2077]: "Estabelecendo link seguro com o repositorio remoto..."' -ForegroundColor Magenta
+    Write-Host '  [ALT CUNNINGHAM // CP2077]: "Escaneando versao mais recente alem da Blackwall..."' -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  Versao local instalada : v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Cyan
+    Write-Host "  Consultando            : $CYBERDECK_REPO_RAW" -ForegroundColor DarkGray
+    Write-Host ""
+
+    $remoto = Get-RemoteVersion
+
+    if ($null -eq $remoto) {
+        Write-Host "  [ERRO DE REDE] Nao foi possivel conectar ao repositorio." -ForegroundColor Red
+        Write-Host '  [JOHNNY SILVERHAND]: "Sem internet ou repositorio offline. Tenta de novo mais tarde."' -ForegroundColor Yellow
+        Pause-Cyber
+        return
+    }
+
+    $versaoRemota = $remoto.version
+    $dataRemota   = $remoto.release_date
+    $cmp = Compare-Versions -local $CYBERDECK_VERSION_LOCAL -remote $versaoRemota
+
+    if ($cmp -gt 0) {
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host "  [ATUALIZACAO DISPONIVEL!] v$versaoRemota ($dataRemota)" -ForegroundColor Green
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host '  [DAVID MARTINEZ // Edgerunners]: "Novo firmware disponivel. Hora de instalar, choom!"' -ForegroundColor Yellow
+        Write-Host ""
+
+        # Mostra o changelog da versao mais recente
+        $entrada = $remoto.changelog | Where-Object { $_.version -eq $versaoRemota } | Select-Object -First 1
+        if ($entrada) {
+            Write-Host "  O QUE HA DE NOVO NA v$versaoRemota :" -ForegroundColor Cyan
+            foreach ($linha in $entrada.changes) {
+                Write-Host "    >> $linha" -ForegroundColor White
+            }
+        }
+
+        Write-Host ""
+        Write-Host "  Como atualizar:" -ForegroundColor Cyan
+        Write-Host "    1) Acesse: https://github.com/Dante3147/CYBER-DECK" -ForegroundColor White
+        Write-Host "    2) Clique em [Code] > [Download ZIP]" -ForegroundColor White
+        Write-Host "    3) Extraia sobre a pasta atual substituindo os arquivos" -ForegroundColor White
+        Write-Host ""
+        $abrirGit = Read-Host "  Deseja abrir o repositorio no navegador agora? [S/N]"
+        if ($abrirGit.Trim().ToUpper() -eq "S") {
+            Start-Process "https://github.com/Dante3147/CYBER-DECK"
+        }
+    } elseif ($cmp -eq 0) {
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host "  [OK] Voce ja possui a versao mais recente: v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Green
+        Write-Host "  ========================================================" -ForegroundColor Green
+        Write-Host '  [LUCY // Edgerunners]: "Tudo atualizado. Nenhum ICE passou."' -ForegroundColor Cyan
+    } else {
+        Write-Host "  Versao local v$CYBERDECK_VERSION_LOCAL > Remota v$versaoRemota" -ForegroundColor Yellow
+        Write-Host '  [REBECCA // Edgerunners]: "Sua versao e mais nova que a do repositorio. Developer mode!"' -ForegroundColor Magenta
+    }
+
+    Pause-Cyber
+}
+
+function Invoke-RegistrosAtualizacao {
+    Clear-Host
+    Show-BootBanner "[LOG] REGISTROS DE ATUALIZACAO // CHANGELOG COMPLETO"
+    Write-Host '  [VIKTOR VEKTOR // CP2077]: "Aqui estao todos os implantes e melhorias desde o inicio."' -ForegroundColor Green
+    Write-Host ""
+
+    $remoto = Get-RemoteVersion
+
+    if ($null -eq $remoto) {
+        Write-Host "  [AVISO] Sem conexao com GitHub. Exibindo apenas versao local." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  Versao local: v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Cyan
+        Write-Host '  [SONGBIRD]: "Conecte a internet para ver o changelog completo do repositorio."' -ForegroundColor Magenta
+        Pause-Cyber
+        return
+    }
+
+    Write-Host "  Versao local  : v$CYBERDECK_VERSION_LOCAL" -ForegroundColor Cyan
+    Write-Host "  Versao remota : v$($remoto.version) ($($remoto.release_date))" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+    Write-Host "  HISTORICO COMPLETO DE VERSOES" -ForegroundColor Yellow
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+
+    foreach ($entrada in $remoto.changelog) {
+        Write-Host ""
+        Write-Host "  [ v$($entrada.version) ]  $($entrada.date)" -ForegroundColor Cyan
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
+        foreach ($linha in $entrada.changes) {
+            Write-Host "    + $linha" -ForegroundColor White
+        }
+    }
+
+    Write-Host ""
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+    Write-Host "  Repositorio oficial: https://github.com/Dante3147/CYBER-DECK" -ForegroundColor DarkGray
+    Write-Host "  ====================================================================" -ForegroundColor Yellow
+    Pause-Cyber
+}
+
 Assert-Admin
 
 function Select-Corporation {
@@ -3648,6 +3896,10 @@ while ($true) {
     Write-Host ""
     Write-Host "  [PROTOCOLOS ESPECIAIS]" -ForegroundColor $tema.Sec
     Write-Host "   99. Rotina Rapida (1 + 4 + 8)  |  88. Trocar Corporacao  |  0. Sair" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  [ATUALIZACOES DO CYBERDECK]" -ForegroundColor $tema.Sec
+    Write-Host "   UPD. Buscar por Atualizacao (GitHub)" -ForegroundColor Green
+    Write-Host "   LOG. Registros de Atualizacao (Changelog)" -ForegroundColor Green
     Write-Host "========================================================================" -ForegroundColor $tema.Pri
     $op = Read-Host "Escolha uma opcao e pressione ENTER"
     switch ($op) {
@@ -3673,6 +3925,10 @@ while ($true) {
         "20" { Invoke-Op20 }
         "99" { Invoke-Op01; Invoke-Op03; Invoke-Op07 }
         "88" { $tema = Select-Corporation }
+        "upd" { Invoke-BuscarAtualizacao }
+        "UPD" { Invoke-BuscarAtualizacao }
+        "log" { Invoke-RegistrosAtualizacao }
+        "LOG" { Invoke-RegistrosAtualizacao }
         "0"  {
             Clear-Host
             Stop-MobileBackgroundProcesses

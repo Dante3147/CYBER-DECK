@@ -1,0 +1,113 @@
+{
+  "version": "36.0",
+  "release_date": "2026-11-21",
+  "changelog": [
+    {
+      "version": "36.0",
+      "date": "2026-11-21",
+      "changes": [
+        "REMOCAO EM LOTE de pastas orfas por ENTER ou intervalo (ex: 1-221) com confirmacao de seguranca para lotes grandes",
+        "Cancelamento seguro de lotes por 'C' ou 'N'",
+        "Adicionado verificador de atualizacoes (Buscar por Atualizacao) integrado ao GitHub",
+        "Adicionado Registros de Atualizacao no menu principal"
+      ]
+    },
+    {
+      "version": "35.0",
+      "date": "2026-11",
+      "changes": [
+        "Encerramento forcado com arvore de processos (taskkill /F /IM /T) de adb.exe, fastboot.exe ao sair ou fechar no X",
+        "Encerramento de ferramentas iPhone (idevice_id.exe, ideviceinfo.exe, ideviceinstaller.exe, iproxy.exe) ao sair"
+      ]
+    },
+    {
+      "version": "34.0",
+      "date": "2026-11",
+      "changes": [
+        "Corrigida a listagem de pacotes Android via Get-AndroidPackagesSafe",
+        "Resolucao automatica do ID ativo em adb devices (USB ou Wi-Fi mDNS)",
+        "Tratamento de saidas em linha unica ou sem prefixo package:"
+      ]
+    },
+    {
+      "version": "33.0",
+      "date": "2026-11",
+      "changes": [
+        "Backups, relatorios e chaves centralizados em Desktop\\DADOS\\BACKUP - DD-MM-AAAA\\",
+        "Espelhamento automatico na mesma estrutura dentro do projeto (Pen Drive / SSD Externo)",
+        "Subpastas automaticas: BACKUPS-PROGRAMAS, BACKUP DADOS NAVEGADORES, BACKUP_LIMPEZA_REGISTRO_ORFAOS, RELATORIOS_LIMPEZA_REGISTRO, RELATORIOS_HARDWARE, CHAVES_RECUPERACAO_BITLOCKER"
+      ]
+    },
+    {
+      "version": "32.0",
+      "date": "2026-10",
+      "changes": [
+        "Espelhamento automatico na pasta DADOS\\ na raiz do projeto (Pen Drive ou SSD Externo)",
+        "Cada backup direcionado automaticamente para sua subpasta especifica"
+      ]
+    },
+    {
+      "version": "31.0",
+      "date": "2026-10",
+      "changes": [
+        "Encerramento automatico de processos mobile ao selecionar [0] para sair: adb kill-server + adb.exe/fastboot.exe",
+        "Encerramento de processos libimobiledevice (idevice_id, ideviceinfo, ideviceinstaller, iproxy)"
+      ]
+    },
+    {
+      "version": "30.0",
+      "date": "2026-10",
+      "changes": [
+        "NOVA OPCAO 20: Seguranca Online e Vazamento de Dados (100% gratuita)",
+        "Verificador de senhas vazadas via Have I Been Pwned (k-Anonymity, sem chave de API)",
+        "Verificador de e-mails vazados via API XposedOrNot + atalhos HIBP/DeHashed/Mozilla Monitor",
+        "Auditoria DNS Anti-Phishing + verificacao SPF/DMARC",
+        "Guia interativo de Blindagem Online (Bitwarden, KeePassXC, 2FA, aliases)"
+      ]
+    },
+    {
+      "version": "29.0",
+      "date": "2026-09",
+      "changes": [
+        "Opcao 18 inclui [9] MOSTRAR PACOTES NATIVOS / DO SISTEMA para Android e iPhone",
+        "Opcao [8] Remover Pacote agora permite listar apps de Terceiros, Nativos ou Todos"
+      ]
+    },
+    {
+      "version": "28.0",
+      "date": "2026-09",
+      "changes": [
+        "Opcao 18 inclui [8] REMOVER / DESINSTALAR PACOTE para Android (adb uninstall / pm uninstall --user 0) e iPhone (Bundle ID via ideviceinstaller -U)",
+        "Corrigido retorno do pareamento Wi-Fi ADB (Ensure-AdbConnection)"
+      ]
+    },
+    {
+      "version": "27.0",
+      "date": "2026-09",
+      "changes": [
+        "Opcao 16 possui submenu com LIMPEZA PROFUNDA DE REGISTROS: Regedit Uninstall orfaos (HKLM/WOW6432Node/HKCU)",
+        "Regedit App Paths e MuiCache orfaos com backup .reg automatico",
+        "Pastas orfas em %APPDATA%, %LOCALAPPDATA%, AppData\\LocalLow e C:\\ProgramData",
+        "Relatorio completo somente-leitura com exportacao .txt"
+      ]
+    },
+    {
+      "version": "26.0",
+      "date": "2026-08",
+      "changes": [
+        "Barra de progresso com porcentagem real (0% a 100%) nos downloads portateis do ADB e libimobiledevice",
+        "Exibe barra visual [####----] com tamanho MB, velocidade (KB/s ou MB/s) e status de extracao"
+      ]
+    },
+    {
+      "version": "25.0",
+      "date": "2026-08",
+      "changes": [
+        "NOVA OPCAO 19: Criptografia e Cofre de Discos",
+        "Suporte a BitLocker To Go (Pen Drives/HDs Externos com AES-256) e BitLocker interno (XTS-AES-256 + TPM)",
+        "Backup automatico da Chave de Recuperacao de 48 digitos em .txt na Area de Trabalho",
+        "Integracao com VeraCrypt open-source (funciona no Windows Home e Linux)"
+      ]
+    }
+  ]
+}
