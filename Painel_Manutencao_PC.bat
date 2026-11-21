@@ -29,6 +29,9 @@ echo.
 pause
 exit /b
 :TEM_ADMIN
+if exist "%~dp0Painel_Manutencao_PC.ps1" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '%~dp0Painel_Manutencao_PC.ps1' ; Invoke-CheckUpdateOnBoot }"
+)
 
 :SELECAO_CORPO
 title CYBERDECK OS v36.0 // NIGHT CITY EDITION (CMD)
@@ -40,6 +43,14 @@ echo %CYN% ^| ^|      \ \_/ /^| ^|_) ^| ^|__  ^| ^|__) ^| ^|  ^| ^| ^|__ ^| ^|  
 echo %CYN% ^| ^|       \   / ^|  _ ^<^|  __^| ^|  _  /^| ^|  ^| ^|  __^|^| ^|    ^|  ^<    %RST%
 echo %CYN% ^| ^|____    ^| ^|  ^| ^|_) ^| ^|____^| ^| \ \^| ^|__^| ^| ^|___^| ^|____^| . \   %RST%
 echo %CYN%  \_____^|   ^|_^|  ^|____/^|______^|_^|  \_\_____/^|______\_____^|_^|\_\  %RST%
+echo %YLW%========================================================================%RST%
+echo %CYN%  PT ^| Criador do CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %CYN%  EN ^| CYBER-DECK Creator: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %CYN%  ES ^| Creador del CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %GRY%------------------------------------------------------------------------%RST%
+echo %RED%  PT ^| !! COMERCIALIZACAO ESTRITAMENTE PROIBIDA ^| Apenas para uso pessoal e educacional%RST%
+echo %RED%  EN ^| !! COMMERCIAL USE STRICTLY PROHIBITED ^| For personal and educational use only%RST%
+echo %RED%  ES ^| !! USO COMERCIAL ESTRICTAMENTE PROHIBIDO ^| Solo para uso personal y educativo%RST%
 echo %YLW%========================================================================%RST%
 echo %RED%  [JOHNNY SILVERHAND]: "Acorda, Samurai. Temos um PC para otimizar."%RST%
 echo %CYN%  [V]: "Escolhe logo a faccao e vamos limpar esse hardware."%RST%
@@ -150,10 +161,21 @@ echo.
 echo %COR_SEC%  [SEGURANCA ONLINE E VAZAMENTO DE DADOS]%RST%
 echo   %CYN%20.%RST% Auditoria de Vazamentos: Senhas (k-Anonymity), E-mails e Blindagem
 echo.
+echo %COR_SEC%  [ATUALIZACOES DO CYBERDECK]%RST%
+echo   %GRN%21.%RST% Central de Atualizacoes (Baixar Update / Ver O Que Mudou)
+echo.
 echo %COR_SEC%  [PROTOCOLOS ESPECIAIS]%RST%
 echo   %YLW%99.%RST% Executar Manutencao Basica (Opcoes 1 + 4 + 8)
 echo   %GRY%88.%RST% Trocar de Corporacao / Faccao
 echo    %RED%0.%RST% Desconectar do CyberDeck (Sair)
+echo %COR_PRI%========================================================================%RST%
+echo %CYN%  PT ^| Criador do CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %CYN%  EN ^| CYBER-DECK Creator: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %CYN%  ES ^| Creador del CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %GRY%------------------------------------------------------------------------%RST%
+echo %RED%  PT ^| !! COMERCIALIZACAO ESTRITAMENTE PROIBIDA ^| Apenas para uso pessoal e educacional%RST%
+echo %RED%  EN ^| !! COMMERCIAL USE STRICTLY PROHIBITED ^| For personal and educational use only%RST%
+echo %RED%  ES ^| !! USO COMERCIAL ESTRICTAMENTE PROHIBIDO ^| Solo para uso personal y educativo%RST%
 echo %COR_PRI%========================================================================%RST%
 set "opcao="
 set /p "opcao=%WHT%Escolha uma opcao e pressione ENTER: %RST%"
@@ -178,6 +200,9 @@ if "%opcao%"=="17" goto OP17
 if "%opcao%"=="18" goto OP18
 if "%opcao%"=="19" goto OP19
 if "%opcao%"=="20" goto OP20
+if "%opcao%"=="21" goto OP21
+if /i "%opcao%"=="upd" goto OP21
+if /i "%opcao%"=="log" goto OP21_LOG
 if "%opcao%"=="99" goto OP99
 if "%opcao%"=="88" goto SELECAO_CORPO
 if "%opcao%"=="0" goto SAIR
@@ -1538,6 +1563,26 @@ pause
 goto MENU
 :OP20_RUN_PS
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts_individuais_powershell\20_vazamento_dados_online.ps1"
+goto MENU
+
+:OP21
+cls
+if exist "%~dp0Painel_Manutencao_PC.ps1" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '%~dp0Painel_Manutencao_PC.ps1' ; Invoke-MenuAtualizacoes }"
+) else (
+    echo %RED%  [ERRO] Painel_Manutencao_PC.ps1 nao encontrado.%RST%
+    pause
+)
+goto MENU
+
+:OP21_LOG
+cls
+if exist "%~dp0Painel_Manutencao_PC.ps1" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '%~dp0Painel_Manutencao_PC.ps1' ; Show-ChangelogViewer }"
+) else (
+    echo %RED%  [ERRO] Painel_Manutencao_PC.ps1 nao encontrado.%RST%
+    pause
+)
 goto MENU
 
 :OP99
