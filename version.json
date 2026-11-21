@@ -1,15 +1,12 @@
 {
-  "version": "36.0",
+  "version": "37.0",
   "release_date": "2026-11-21",
   "changelog": [
     {
-      "version": "36.0",
+      "version": "37.0",
       "date": "2026-11-21",
       "changes": [
-        "REMOCAO EM LOTE de pastas orfas por ENTER ou intervalo (ex: 1-221) com confirmacao de seguranca para lotes grandes",
-        "Cancelamento seguro de lotes por 'C' ou 'N'",
-        "Adicionado verificador de atualizacoes (Buscar por Atualizacao) integrado ao GitHub",
-        "Adicionado Registros de Atualizacao no menu principal"
+        "TESTE DE SINCRONIZAÇÃO COM O GITHUB E SCRIPTS",
       ]
     },
     {
