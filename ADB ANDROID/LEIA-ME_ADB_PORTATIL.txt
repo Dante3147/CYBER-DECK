@@ -1,0 +1,10 @@
+========================================================================
+  PASTA PORTATIL: ADB ANDROID (Android Platform-Tools)
+========================================================================
+Ao rodar a Opcao 18 -> [1] Android (ou [7] Baixar ADB Portatil), o
+CyberDeck baixa o pacote oficial 'platform-tools' do Google e extrai
+os arquivos (adb.exe, fastboot.exe e DLLs) diretamente aqui dentro.
+
+Assim, voce pode copiar o projeto inteiro para um PEN DRIVE e usar o
+ADB em qualquer computador Windows sem precisar instalar nada de novo!
+========================================================================

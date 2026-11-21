@@ -1,0 +1,11 @@
+========================================================================
+  PASTA PORTATIL: LIBIMOBILEDEVICE IPHONE (Ferramentas iOS para Windows)
+========================================================================
+Ao rodar a Opcao 18 -> [2] iPhone -> [7] Baixar Ferramenta Portatil, o
+CyberDeck baixa o pacote portatil 'libimobiledevice' para Windows x64
+(idevice_id.exe, ideviceinfo.exe, DLLs) diretamente aqui dentro.
+
+Voce pode levar esta pasta no PEN DRIVE junto com o projeto.
+Obs: para comunicacao USB com iPhone no Windows, o driver da Apple
+(Apple Mobile Device Support / iTunes) precisa estar presente no PC.
+========================================================================

@@ -1,0 +1,10 @@
+========================================================================
+  PASTA PORTATIL: VERACRYPT PORTATIL (Windows Home, Pen Drives e Linux)
+========================================================================
+Para usar o VeraCrypt em modo 100% portatil direto do seu Pen Drive:
+1) Baixe o instalador oficial em https://veracrypt.fr/en/Downloads.html
+   (ou pela Opcao 19 -> [6] -> [3] no painel CyberDeck).
+2) Ao executar o instalador, escolha a opcao "Extract" (Extrair) em vez
+   de "Install" e selecione esta pasta: VERACRYPT PORTATIL3) Pronto! O CyberDeck detectara 'VeraCrypt.exe' automaticamente aqui
+   em qualquer PC Windows (inclusive Windows Home) sem precisar instalar.
+========================================================================

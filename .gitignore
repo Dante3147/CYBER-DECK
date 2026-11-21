@@ -1,0 +1,29 @@
+# ============================================================
+# CYBER-DECK .gitignore
+# Exclui dados pessoais, backups e ferramentas portáteis binárias
+# ============================================================
+
+# Pasta de dados/backups datados (contém chaves BitLocker pessoais!)
+DADOS/
+
+# Ferramentas portáteis baixadas automaticamente (não commitar binários)
+ADB ANDROID/*.exe
+ADB ANDROID/*.dll
+ADB ANDROID/platform-tools/
+
+LIBIMOBILEDEVICE IPHONE/*.exe
+LIBIMOBILEDEVICE IPHONE/*.dll
+
+VERACRYPT PORTATIL/*.exe
+VERACRYPT PORTATIL/*.dll
+
+# Arquivos temporários do Windows
+Thumbs.db
+desktop.ini
+*.tmp
+*.log
+
+# Chaves e dados sensíveis (segurança)
+*.txt.bak
+CHAVES_RECUPERACAO_BITLOCKER/
+*.key
