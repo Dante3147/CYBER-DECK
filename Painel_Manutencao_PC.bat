@@ -29,8 +29,26 @@ echo.
 pause
 exit /b
 :TEM_ADMIN
-if exist "%~dp0Painel_Manutencao_PC.ps1" (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '%~dp0Painel_Manutencao_PC.ps1' ; Invoke-CheckUpdateOnBoot }"
+:: Verificacao silenciosa de atualizacao (100% nativa CMD, sem abrir janela do PowerShell)
+set "NOVA_VERSAO="
+for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $u = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 3 -ErrorAction Stop).version; if ([version]($u -replace '[^0-9.]','') -gt [version]('36.0' -replace '[^0-9.]','')) { Write-Output $u } } catch {}" 2^>nul`) do (
+    set "NOVA_VERSAO=%%v"
+)
+
+if defined NOVA_VERSAO (
+    cls
+    echo %MAG%========================================================================%RST%
+    echo %GRN%  [NOVA ATUALIZACAO DISPONIVEL!] CYBERDECK OS v!NOVA_VERSAO!%RST%
+    echo %CYN%  Versao Instalada: v36.0  ^>^>  Versao Nuvem: v!NOVA_VERSAO!%RST%
+    echo %MAG%========================================================================%RST%
+    echo %MAG%  [SONGBIRD // CP2077]: "Novo firmware detectado na rede do GitHub."%RST%
+    echo %YLW%  [DAVID MARTINEZ // Edgerunners]: "Deseja atualizar agora?"%RST%
+    echo.
+    echo   %GRN%[1] Baixar e Atualizar Agora (Permanece no Painel .bat)%RST%
+    echo   %GRY%[2] Continuar para o Menu Principal sem atualizar agora%RST%
+    echo.
+    set /p "DECISAO_UPD=Escolha uma opcao [1 ou 2]: "
+    if "!DECISAO_UPD!"=="1" goto ATUALIZAR_BAT_DIRETO
 )
 
 :SELECAO_CORPO
@@ -1567,23 +1585,66 @@ goto MENU
 
 :OP21
 cls
-if exist "%~dp0Painel_Manutencao_PC.ps1" (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '%~dp0Painel_Manutencao_PC.ps1' ; Invoke-MenuAtualizacoes }"
-) else (
-    echo %RED%  [ERRO] Painel_Manutencao_PC.ps1 nao encontrado.%RST%
-    pause
+echo %YLW%========================================================================%RST%
+echo %CYN%  [CENTRAL DE ATUALIZACOES // CMD NATIVE ENGINE]%RST%
+echo %MAG%  [SONGBIRD // CP2077]: "Consultando status no mainframe do GitHub..."%RST%
+echo %YLW%========================================================================%RST%
+echo.
+set "NOVA_VERSAO="
+for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $u = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 5 -ErrorAction Stop).version; if ([version]($u -replace '[^0-9.]','') -gt [version]('36.0' -replace '[^0-9.]','')) { Write-Output $u } } catch {}" 2^>nul`) do (
+    set "NOVA_VERSAO=%%v"
 )
-goto MENU
+
+echo %CYN%  Versao Local Instalada : v36.0%RST%
+if defined NOVA_VERSAO (
+    echo %GRN%  Versao no GitHub       : v!NOVA_VERSAO! [ATUALIZACAO DISPONIVEL!]%RST%
+) else (
+    echo %GRY%  Versao no GitHub       : Sistema atualizado ou offline%RST%
+)
+echo.
+echo %YLW%========================================================================%RST%
+echo %WHT%  OPCOES DE ATUALIZACAO:%RST%
+echo    %GRN%[1] Baixar e Instalar Atualizacao Agora (Permanece no CMD)%RST%
+echo    %YLW%[2] Ver o que foi alterado / Registros de Atualizacao (Changelog)%RST%
+echo    %GRY%[0] Voltar ao Menu Principal%RST%
+echo %YLW%========================================================================%RST%
+echo.
+set /p "OP_UPD=Escolha uma opcao [0, 1 ou 2]: "
+if "!OP_UPD!"=="0" goto MENU
+if "!OP_UPD!"=="1" goto ATUALIZAR_BAT_DIRETO
+if "!OP_UPD!"=="2" goto OP21_LOG
+echo %RED%  [SKIPPY]: "Opcao invalida, choom!"%RST%
+timeout /t 1 >nul
+goto OP21
 
 :OP21_LOG
 cls
-if exist "%~dp0Painel_Manutencao_PC.ps1" (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { . '%~dp0Painel_Manutencao_PC.ps1' ; Show-ChangelogViewer }"
-) else (
-    echo %RED%  [ERRO] Painel_Manutencao_PC.ps1 nao encontrado.%RST%
-    pause
-)
-goto MENU
+echo %YLW%========================================================================%RST%
+echo %CYN%  [LOG] REGISTROS DE ATUALIZACAO // HISTORICO DE VERSOES (CMD)%RST%
+echo %GRN%  [VIKTOR VEKTOR // CP2077]: "Aqui estao todos os implantes e melhorias documentados:"%RST%
+echo %YLW%========================================================================%RST%
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $r = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 5 -ErrorAction Stop); Write-Host ('  Versao Nuvem: v' + $r.version + ' (' + $r.release_date + ')') -ForegroundColor Green; Write-Host ''; foreach ($e in $r.changelog) { Write-Host ('  [ v' + $e.version + ' ] - Data: ' + $e.date) -ForegroundColor Cyan; foreach ($c in $e.changes) { Write-Host ('    + ' + $c) -ForegroundColor White }; Write-Host '' } } catch { Write-Host '  [AVISO] Sem conexao com o GitHub. Exibindo versao local: v36.0' -ForegroundColor Yellow } }"
+echo %YLW%========================================================================%RST%
+pause
+goto OP21
+
+:ATUALIZAR_BAT_DIRETO
+cls
+echo %MAG%========================================================================%RST%
+echo %CYN%  [AUTO-UPDATE CMD] ATUALIZANDO CYBERDECK OS%RST%
+echo %MAG%========================================================================%RST%
+echo %MAG%  [SONGBIRD // CP2077]: "Baixando arquivos do repositorio oficial..."%RST%
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $tmp = Join-Path $env:TEMP ('CyberDeck_CMD_' + (Get-Random)); New-Item -ItemType Directory -Path $tmp -Force | Out-Null; $zip = Join-Path $tmp 'update.zip'; Write-Host '  [1/3] Baixando arquivo ZIP do GitHub...' -ForegroundColor Cyan; (New-Object System.Net.WebClient).DownloadFile('https://github.com/Dante3147/CYBER-DECK/archive/refs/heads/main.zip', $zip); Write-Host '  [2/3] Extraindo arquivos...' -ForegroundColor Cyan; Expand-Archive -Path $zip -DestinationPath (Join-Path $tmp 'ext') -Force; Write-Host '  [3/3] Aplicando atualizacao sobre a pasta...' -ForegroundColor Cyan; $ext = Get-ChildItem (Join-Path $tmp 'ext') -Directory | Select-Object -First 1; $prot = @('DADOS','ADB ANDROID','LIBIMOBILEDEVICE IPHONE','VERACRYPT PORTATIL'); Get-ChildItem -Path $ext.FullName -Recurse | Where-Object { -not $_.PSIsContainer } | ForEach-Object { $rel = $_.FullName.Substring($ext.FullName.Length + 1); $skip = $false; foreach ($p in $prot) { if ($rel -like ($p + '*')) { $skip = $true; break } }; if (-not $skip) { $dest = Join-Path '%~dp0' $rel; $parent = Split-Path $dest -Parent; if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }; Copy-Item -Path $_.FullName -Destination $dest -Force } }; Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue; Write-Host '  [OK] Todos os arquivos (.bat e .ps1) foram atualizados!' -ForegroundColor Green }"
+echo.
+echo %GRN%========================================================================%RST%
+echo %GRN%  [SUCESSO] CYBERDECK OS ATUALIZADO COM SUCESSO!%RST%
+echo %CYN%  [VIKTOR VEKTOR // CP2077]: "Reiniciando o Painel .bat agora..."%RST%
+echo %GRN%========================================================================%RST%
+timeout /t 3 >nul
+start "" "%~f0"
+exit /b
 
 :OP99
 cls
