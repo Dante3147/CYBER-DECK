@@ -44,9 +44,9 @@ echo %CYN% ^| ^|       \   / ^|  _ ^<^|  __^| ^|  _  /^| ^|  ^| ^|  __^|^| ^|   
 echo %CYN% ^| ^|____    ^| ^|  ^| ^|_) ^| ^|____^| ^| \ \^| ^|__^| ^| ^|___^| ^|____^| . \   %RST%
 echo %CYN%  \_____^|   ^|_^|  ^|____/^|______^|_^|  \_\_____/^|______\_____^|_^|\_\  %RST%
 echo %YLW%========================================================================%RST%
-echo %CYN%  PT ^| Criador do CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
-echo %CYN%  EN ^| CYBER-DECK Creator: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
-echo %CYN%  ES ^| Creador del CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %CYN%  PT ^| Criador do CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: suporte@dante3147.anonaddy.me%RST%
+echo %CYN%  EN ^| CYBER-DECK Creator: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: suporte@dante3147.anonaddy.me%RST%
+echo %CYN%  ES ^| Creador del CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: suporte@dante3147.anonaddy.me%RST%
 echo %GRY%------------------------------------------------------------------------%RST%
 echo %RED%  PT ^| !! COMERCIALIZACAO ESTRITAMENTE PROIBIDA ^| Apenas para uso pessoal e educacional%RST%
 echo %RED%  EN ^| !! COMMERCIAL USE STRICTLY PROHIBITED ^| For personal and educational use only%RST%
@@ -169,9 +169,9 @@ echo   %YLW%99.%RST% Executar Manutencao Basica (Opcoes 1 + 4 + 8)
 echo   %GRY%88.%RST% Trocar de Corporacao / Faccao
 echo    %RED%0.%RST% Desconectar do CyberDeck (Sair)
 echo %COR_PRI%========================================================================%RST%
-echo %CYN%  PT ^| Criador do CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
-echo %CYN%  EN ^| CYBER-DECK Creator: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
-echo %CYN%  ES ^| Creador del CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: cyber-deck@dante3147.anonaddy.com%RST%
+echo %CYN%  PT ^| Criador do CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: suporte@dante3147.anonaddy.me%RST%
+echo %CYN%  EN ^| CYBER-DECK Creator: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: suporte@dante3147.anonaddy.me%RST%
+echo %CYN%  ES ^| Creador del CYBER-DECK: Adonis Peixoto (Dante3147) ^| Discord: dante_3147 ^| Email: suporte@dante3147.anonaddy.me%RST%
 echo %GRY%------------------------------------------------------------------------%RST%
 echo %RED%  PT ^| !! COMERCIALIZACAO ESTRITAMENTE PROIBIDA ^| Apenas para uso pessoal e educacional%RST%
 echo %RED%  EN ^| !! COMMERCIAL USE STRICTLY PROHIBITED ^| For personal and educational use only%RST%

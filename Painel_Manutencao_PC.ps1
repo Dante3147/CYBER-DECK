@@ -4253,9 +4253,9 @@ Assert-Admin
 function Show-CyberDeckNotice {
     param([string]$BordaColor = "Yellow")
     # -- CREDITOS DO AUTOR E PROIBICAO COMERCIAL (OFUSCADOS EM BASE64) --
-    $_c1 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q3JpYWRvciBkbyBDWUJFUi1ERUNLOiBBZG9uaXMgUGVpeG90byAoRGFudGUzMTQ3KSB8IERpc2NvcmQ6IGRhbnRlXzMxNDcgfCBFbWFpbDogY3liZXItZGVja0BkYW50ZTMxNDcuYW5vbmFkZHkuY29t'))
-    $_c2 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q1lCRVItREVDSyBDcmVhdG9yOiBBZG9uaXMgUGVpeG90byAoRGFudGUzMTQ3KSB8IERpc2NvcmQ6IGRhbnRlXzMxNDcgfCBFbWFpbDogY3liZXItZGVja0BkYW50ZTMxNDcuYW5vbmFkZHkuY29t'))
-    $_c3 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q3JlYWRvciBkZWwgQ1lCRVItREVDSzogQWRvbmlzIFBlaXhvdG8gKERhbnRlMzE0NykgfCBEaXNjb3JkOiBkYW50ZV8zMTQ3IHwgRW1haWw6IGN5YmVyLWRlY2tAZGFudGUzMTQ3LmFub25hZGR5LmNvbQ=='))
+    $_c1 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q3JpYWRvciBkbyBDWUJFUi1ERUNLOiBBZG9uaXMgUGVpeG90byAoRGFudGUzMTQ3KSB8IERpc2NvcmQ6IGRhbnRlXzMxNDcgfCBFbWFpbDogc3Vwb3J0ZUBkYW50ZTMxNDcuYW5vbmFkZHkubWU='))
+    $_c2 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q1lCRVItREVDSyBDcmVhdG9yOiBBZG9uaXMgUGVpeG90byAoRGFudGUzMTQ3KSB8IERpc2NvcmQ6IGRhbnRlXzMxNDcgfCBFbWFpbDogc3Vwb3J0ZUBkYW50ZTMxNDcuYW5vbmFkZHkubWU='))
+    $_c3 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q3JlYWRvciBkZWwgQ1lCRVItREVDSzogQWRvbmlzIFBlaXhvdG8gKERhbnRlMzE0NykgfCBEaXNjb3JkOiBkYW50ZV8zMTQ3IHwgRW1haWw6IHN1cG9ydGVAZGFudGUzMTQ3LmFub25hZGR5Lm1l'))
     $_p1 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q09NRVJDSUFMSVpBQ0FPIEVTVFJJVEFNRU5URSBQUk9JQklEQSB8IEFwZW5hcyBwYXJhIHVzbyBwZXNzb2FsIGUgZWR1Y2FjaW9uYWw='))
     $_p2 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('Q09NTUVSQ0lBTCBVU0UgU1RSSUNUTFkgUFJPSElCSVRFRCB8IEZvciBwZXJzb25hbCBhbmQgZWR1Y2F0aW9uYWwgdXNlIG9ubHk='))
     $_p3 = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('VVNPIENPTUVSQ0lBTCBFU1RSSUNUQU1FTlRFIFBST0hJQklETyB8IFNvbG8gcGFyYSB1c28gcGVyc29uYWwgeSBlZHVjYXRpdm8='))

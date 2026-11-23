@@ -280,6 +280,6 @@ Leia o arquivo [LICENSE.md](LICENSE.md) completo — disponível em **Português
 
 [![GitHub](https://img.shields.io/badge/GitHub-Dante3147-39ff14?style=flat-square&logo=github)](https://github.com/Dante3147)
 [![Discord](https://img.shields.io/badge/Discord-dante__3147-7289da?style=flat-square&logo=discord)](https://discord.com/users/687855066065272983)
-[![Email](https://img.shields.io/badge/Email-cyber--deck%40dante3147.anonaddy.com-ff0055?style=flat-square&logo=maildotru)](mailto:cyber-deck@dante3147.anonaddy.com)
+[![Email](https://img.shields.io/badge/Email-suporte%40dante3147.anonaddy.me-ff0055?style=flat-square&logo=maildotru)](mailto:suporte@dante3147.anonaddy.me)
 
 </div>
