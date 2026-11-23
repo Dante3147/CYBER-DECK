@@ -7,6 +7,13 @@
 # MODULO: CENTRAL DE ATUALIZACOES DO CYBERDECK (GITHUB)
 # ============================================================================
 $CYBERDECK_VERSION_LOCAL = "36.0"
+$localJsonPath = Join-Path $PSScriptRoot "version.json"
+if (Test-Path $localJsonPath) {
+    try {
+        $localJ = Get-Content $localJsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($localJ.version) { $CYBERDECK_VERSION_LOCAL = $localJ.version }
+    } catch {}
+}
 $CYBERDECK_REPO_RAW      = "https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json"
 $CYBERDECK_ZIP_URL       = "https://github.com/Dante3147/CYBER-DECK/archive/refs/heads/main.zip"
 $CYBERDECK_PASTA_RAIZ    = $PSScriptRoot

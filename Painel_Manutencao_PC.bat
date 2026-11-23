@@ -30,25 +30,24 @@ pause
 exit /b
 :TEM_ADMIN
 :: Verificacao silenciosa de atualizacao (100% nativa CMD, sem abrir janela do PowerShell)
+set "VERSAO_LOCAL=36.0"
 set "NOVA_VERSAO="
-for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $u = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 3 -ErrorAction Stop).version; if ([version]($u -replace '[^0-9.]','') -gt [version]('36.0' -replace '[^0-9.]','')) { Write-Output $u } } catch {}" 2^>nul`) do (
-    set "NOVA_VERSAO=%%v"
+for /f "usebackq tokens=1,2 delims=|" %%a in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $lv = '36.0'; $vf = Join-Path '%~dp0' 'version.json'; if (Test-Path $vf) { try { $lj = (Get-Content $vf -Raw | ConvertFrom-Json); if ($lj.version) { $lv = $lj.version } } catch {} }; $u = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 3 -ErrorAction Stop).version; if ([version]($u -replace '[^0-9.]','') -gt [version]($lv -replace '[^0-9.]','')) { Write-Output ($lv + '|' + $u) } } catch {}" 2^>nul`) do (
+    set "VERSAO_LOCAL=%%a"
+    set "NOVA_VERSAO=%%b"
 )
 
 if defined NOVA_VERSAO (
     cls
     echo %MAG%========================================================================%RST%
     echo %GRN%  [NOVA ATUALIZACAO DISPONIVEL!] CYBERDECK OS v!NOVA_VERSAO!%RST%
-    echo %CYN%  Versao Instalada: v36.0  ^>^>  Versao Nuvem: v!NOVA_VERSAO!%RST%
+    echo %CYN%  Versao Instalada: v!VERSAO_LOCAL!  ^>^>  Versao Nuvem: v!NOVA_VERSAO!%RST%
     echo %MAG%========================================================================%RST%
     echo %MAG%  [SONGBIRD // CP2077]: "Novo firmware detectado na rede do GitHub."%RST%
-    echo %YLW%  [DAVID MARTINEZ // Edgerunners]: "Deseja atualizar agora?"%RST%
+    echo %YLW%  [DAVID MARTINEZ // Edgerunners]: "Iniciando download da nova versao..."%RST%
     echo.
-    echo   %GRN%[1] Baixar e Atualizar Agora (Permanece no Painel .bat)%RST%
-    echo   %GRY%[2] Continuar para o Menu Principal sem atualizar agora%RST%
-    echo.
-    set /p "DECISAO_UPD=Escolha uma opcao [1 ou 2]: "
-    if "!DECISAO_UPD!"=="1" goto ATUALIZAR_BAT_DIRETO
+    timeout /t 2 >nul
+    goto ATUALIZAR_BAT_DIRETO
 )
 
 :SELECAO_CORPO
@@ -1590,12 +1589,14 @@ echo %CYN%  [CENTRAL DE ATUALIZACOES // CMD NATIVE ENGINE]%RST%
 echo %MAG%  [SONGBIRD // CP2077]: "Consultando status no mainframe do GitHub..."%RST%
 echo %YLW%========================================================================%RST%
 echo.
+set "VERSAO_LOCAL=36.0"
 set "NOVA_VERSAO="
-for /f "usebackq delims=" %%v in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $u = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 5 -ErrorAction Stop).version; if ([version]($u -replace '[^0-9.]','') -gt [version]('36.0' -replace '[^0-9.]','')) { Write-Output $u } } catch {}" 2^>nul`) do (
-    set "NOVA_VERSAO=%%v"
+for /f "usebackq tokens=1,2 delims=|" %%a in (`powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $lv = '36.0'; $vf = Join-Path '%~dp0' 'version.json'; if (Test-Path $vf) { try { $lj = (Get-Content $vf -Raw | ConvertFrom-Json); if ($lj.version) { $lv = $lj.version } } catch {} }; $u = (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Dante3147/CYBER-DECK/main/version.json' -TimeoutSec 5 -ErrorAction Stop).version; if ([version]($u -replace '[^0-9.]','') -gt [version]($lv -replace '[^0-9.]','')) { Write-Output ($lv + '|' + $u) } else { Write-Output ($lv + '|') } } catch {}" 2^>nul`) do (
+    set "VERSAO_LOCAL=%%a"
+    set "NOVA_VERSAO=%%b"
 )
 
-echo %CYN%  Versao Local Instalada : v36.0%RST%
+echo %CYN%  Versao Local Instalada : v!VERSAO_LOCAL!%RST%
 if defined NOVA_VERSAO (
     echo %GRN%  Versao no GitHub       : v!NOVA_VERSAO! [ATUALIZACAO DISPONIVEL!]%RST%
 ) else (
