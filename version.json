@@ -1,15 +1,24 @@
 {
-  "version": "38.0.1",
-  "release_date": "2026-11-21",
+  "version": "39.0",
+  "release_date": "2026-11-24",
   "changelog": [
-     {
+    {
+      "version": "39.0",
+      "date": "2026-11-24",
+      "changes": [
+        "Guia Interativo de Depuracao USB e Modo Desenvolvedor por marca e modelo (Samsung, Xiaomi/HyperOS/MIUI, Motorola, iPhone/iOS, Realme/OPPO/OnePlus, Pixel, Asus, LG e generico)",
+        "Pareamento ADB sem fio via QR Code (Android 11+) 100% offline com codigo PIN dinamico e interface Cyberpunk",
+        "Inclusao da biblioteca offline qrcode.min.js na pasta ADB ANDROID para pareamento sem conexao externa"
+      ]
+    },
+    {
       "version": "38.0.1",
       "date": "2026-11-21",
       "changes": [
         "TESTE DE SINCRONIZAÇÃO COM O GITHUB E SCRIPTS E IMPLEMENTAÇÃO DE UPDTADE AO ABRIR E OPÇÃO PARA BUSCAR ATUALIZAÇÃO"
       ]
     },
-	{
+    {
       "version": "37.0",
       "date": "2026-11-21",
       "changes": [

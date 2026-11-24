@@ -2281,6 +2281,382 @@ function Install-PortableIphoneTools {
     return $null
 }
 
+function Show-AdbQrCodePairing {
+    param([string]$AdbPath = "")
+    Clear-Host
+    Show-BootBanner "[18-QR] PAREAMENTO ADB VIA QR CODE / WI-FI (ANDROID 11+)"
+    Write-Host '  [CAPRI // Edgerunners 2]: "Gerando matriz QR Code neural para pareamento sem fio."' -ForegroundColor Cyan
+    Write-Host '  [SONGBIRD // CP2077]: "Certifique-se de que o computador e o celular estao na MESMA rede Wi-Fi."' -ForegroundColor Magenta
+    Write-Host ""
+
+    $pairCode = (Get-Random -Minimum 100000 -Maximum 999999).ToString()
+    $hostName = $env:COMPUTERNAME
+    if ($hostName.Length -gt 12) { $hostName = $hostName.Substring(0, 12) }
+    $serviceName = "CYBERDECK-$hostName"
+    $qrPayload = "WIFI:T:ADB;S:$serviceName;P:$pairCode;;"
+
+    # Localiza qrcode.min.js
+    $root = Get-CyberDeckRoot
+    $jsFile = Join-Path $root "ADB ANDROID\qrcode.min.js"
+    $jsInline = ""
+    if (Test-Path $jsFile) {
+        try { $jsInline = Get-Content $jsFile -Raw -Encoding UTF8 } catch {}
+    }
+
+    $htmlPath = Join-Path $env:TEMP "cyberdeck_adb_qr.html"
+    $htmlContent = @"
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBERDECK // PAREAMENTO ADB VIA QR CODE</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background-color: #0b0c10;
+    color: #00ffcc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .card {
+    background: #12131c;
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 35px rgba(0, 255, 204, 0.25);
+    border-radius: 12px;
+    padding: 25px 35px;
+    max-width: 550px;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    color: #ff0055;
+    margin: 0 0 6px 0;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(255, 0, 85, 0.6);
+  }
+  .sub {
+    color: #ffff00;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+  }
+  .qr-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 10px auto;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+  }
+  .qr-box canvas, .qr-box img {
+    display: block !important;
+    margin: 0 auto !important;
+  }
+  .badge-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: #1f2030;
+    border: 1px solid #ff0055;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #ffffff;
+  }
+  .badge span {
+    color: #00ffcc;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 16px;
+  }
+  .steps {
+    text-align: left;
+    background: #181926;
+    border-left: 4px solid #00ffcc;
+    padding: 15px 18px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #d1d5db;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+  .steps b { color: #00ffcc; }
+  .steps ol { margin: 5px 0 0 0; padding-left: 20px; }
+  .steps li { margin-bottom: 4px; }
+  .footer {
+    margin-top: 15px;
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>CYBERDECK // ADB WIRELESS</h1>
+  <div class="sub">[ANDROID 11+] PAREAMENTO SEM FIO VIA QR CODE</div>
+  <div class="qr-box" id="qrcode"></div>
+  <div class="badge-container">
+    <div class="badge">Servico: <span>$serviceName</span></div>
+    <div class="badge">Codigo: <span>$pairCode</span></div>
+  </div>
+  <div class="steps">
+    <b>Passo a passo no seu celular Android:</b>
+    <ol>
+      <li>Certifique-se de que o celular e o computador estao no <b>mesmo Wi-Fi</b>.</li>
+      <li>No celular, abra <b>Configuracoes &gt; Opcoes do desenvolvedor</b>.</li>
+      <li>Ative a chave <b>Depuracao sem fio</b> (Wireless debugging).</li>
+      <li>Toque em <b>"Parear dispositivo com codigo QR"</b>.</li>
+      <li>Aponte a camera do celular para o codigo QR acima!</li>
+    </ol>
+  </div>
+  <div class="footer">CYBERDECK OS // NIGHT CITY EDITION</div>
+</div>
+<script>
+$jsInline
+
+if (typeof QRCode !== 'undefined') {
+  new QRCode(document.getElementById("qrcode"), {
+    text: "$qrPayload",
+    width: 220,
+    height: 220,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.M
+  });
+} else {
+  document.getElementById("qrcode").innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent("$qrPayload") + '" alt="QR Code" width="220" height="220" />';
+}
+</script>
+</body>
+</html>
+"@
+
+    [System.IO.File]::WriteAllText($htmlPath, $htmlContent, [System.Text.Encoding]::UTF8)
+
+    try {
+        Start-Process $htmlPath
+        Write-Host "  [OK] Pagina do QR Code aberta no seu navegador!" -ForegroundColor Green
+    } catch {
+        Write-Host "  [AVISO] Nao foi possivel abrir o navegador automaticamente. Arquivo em: $htmlPath" -ForegroundColor Yellow
+    }
+
+    Write-Host ""
+    Write-Host "  ========================================================================" -ForegroundColor Cyan
+    Write-Host "  COMO PAREAR AGORA NO SEU CELULAR ANDROID:" -ForegroundColor White
+    Write-Host "    1. Celular e PC devem estar conectados no MESMO Wi-Fi." -ForegroundColor White
+    Write-Host "    2. No celular: Configuracoes > Opcoes do desenvolvedor > Depuracao sem fio." -ForegroundColor White
+    Write-Host "    3. Toque em 'Parear dispositivo com codigo QR' e aponte para a tela." -ForegroundColor White
+    Write-Host "  ========================================================================" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  [DICA]: Se o seu aparelho preferir parear digitando o codigo de 6 digitos:" -ForegroundColor Yellow
+    Write-Host "          No celular, toque em 'Parear com codigo de pareamento'." -ForegroundColor White
+    Write-Host "          Ele mostrara um IP:PORTA e um codigo de 6 digitos na tela." -ForegroundColor White
+    Write-Host ""
+
+    if ($AdbPath) {
+        $resp = Read-Host "Deseja parear digitando IP:PORTA e Codigo de 6 digitos agora? [S/N]"
+        if ($resp -match "^[sS]$") {
+            $pairAddr = (Read-Host "Digite IP:PORTA de pareamento (ex: 192.168.1.50:37123)").Trim()
+            $codeDig  = (Read-Host "Digite o codigo de 6 digitos exibido no celular").Trim()
+            if ($pairAddr -and $codeDig) {
+                Write-Host "`n  [PAREANDO] Executando: adb pair $pairAddr $codeDig ..." -ForegroundColor Cyan
+                $outPair = & $AdbPath pair $pairAddr $codeDig 2>&1
+                foreach ($l in $outPair) { Write-Host "  $l" -ForegroundColor DarkGray }
+                Start-Sleep -Seconds 1
+            }
+            $connAddr = (Read-Host "Digite IP:PORTA principal da Depuracao sem fio (ou pressione ENTER para autodetectar)").Trim()
+            if ($connAddr) {
+                Write-Host "`n  [CONECTANDO] Executando: adb connect $connAddr ..." -ForegroundColor Cyan
+                $outConn = & $AdbPath connect $connAddr 2>&1
+                foreach ($l in $outConn) { Write-Host "  $l" -ForegroundColor DarkGray }
+            }
+        }
+
+        # Verifica conexao
+        Write-Host "`n  [VERIFICANDO CONEXAO ADB]..." -ForegroundColor Cyan
+        $devs = & $AdbPath devices 2>&1
+        $found = $false
+        foreach ($d in $devs) {
+            if ($d -match "^(\S+)\s+device$") {
+                Write-Host "  [SUCESSO] Dispositivo conectado: $($matches[1])" -ForegroundColor Green
+                $found = $true
+            }
+        }
+        if (-not $found) {
+            Write-Host "  [INFO] Nenhum dispositivo Wi-Fi conectado ainda. Apos escanear o QR, verifique na opcao [6]." -ForegroundColor Yellow
+        }
+    }
+}
+
+function Show-MobileDebugGuide {
+    param([string]$AdbPath = "")
+    while ($true) {
+        Clear-Host
+        Show-BootBanner "[GUIA] COMO ATIVAR DEPURACAO USB E MODO DESENVOLVEDOR"
+        Write-Host '  [VIKTOR VEKTOR // CP2077]: "Cada fabricante esconde a porta de acesso do sistema. Vamos abrir a sua."' -ForegroundColor Green
+        Write-Host '  [LUCY // Edgerunners 1]: "Digite a marca ou modelo do seu aparelho para ver o passo a passo exato."' -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  Modelos suportados com instrucoes personalizadas:" -ForegroundColor DarkGray
+        Write-Host "    - Samsung (Galaxy S, A, M, Z, Note, One UI)" -ForegroundColor White
+        Write-Host "    - Xiaomi / Redmi / POCO (MIUI e HyperOS)" -ForegroundColor White
+        Write-Host "    - Motorola / Lenovo (Moto G, Edge, E, etc.)" -ForegroundColor White
+        Write-Host "    - iPhone / iPad (Apple iOS 12 ao iOS 18+)" -ForegroundColor White
+        Write-Host "    - Realme / OPPO / OnePlus (Realme UI / ColorOS)" -ForegroundColor White
+        Write-Host "    - Google Pixel, Asus (ROG/Zenfone), LG, Sony e Android Geral" -ForegroundColor White
+        Write-Host "    - [QR] Pareamento sem fio via QR Code (Android 11+)" -ForegroundColor Yellow
+        Write-Host "========================================================================" -ForegroundColor Yellow
+        Write-Host ""
+        $modelo = Read-Host "Qual o modelo do seu celular Android ou iPhone? Digite o modelo por favor (ou 0 para voltar)"
+        if ([string]::IsNullOrWhiteSpace($modelo) -or $modelo -eq "0") { break }
+
+        $m = $modelo.Trim().ToLower()
+
+        Clear-Host
+        Show-BootBanner "[GUIA DE ATIVACAO] RESULTADO PARA: $($modelo.ToUpper())"
+
+        if ($m -match "iphone|apple|ios|ipad") {
+            Write-Host "  ========================================================================" -ForegroundColor Magenta
+            Write-Host "  [GUIA PASSO A PASSO // IPHONE E IPAD (APPLE IOS)]" -ForegroundColor Magenta
+            Write-Host "  ========================================================================" -ForegroundColor Magenta
+            Write-Host '  [HANAKO ARASAKA // CP2077]: "O iOS isola aplicativos por sandbox e nao usa ADB."' -ForegroundColor White
+            Write-Host "  A comunicacao segura e feita por autorizacao de certificado e 'Modo de Desenvolvedor'." -ForegroundColor DarkGray
+            Write-Host ""
+            Write-Host "  [PASSO 1 - CONEXAO VIA CABO E CONFIANCA]:" -ForegroundColor Cyan
+            Write-Host "    1. Desbloqueie a tela do iPhone com Face ID / Touch ID ou codigo." -ForegroundColor White
+            Write-Host "    2. Conecte o cabo Lightning ou USB-C original no iPhone e no PC." -ForegroundColor White
+            Write-Host "    3. Na tela do iPhone surgira uma mensagem: 'CONFIAR NESTE COMPUTADOR?'" -ForegroundColor Yellow
+            Write-Host "    4. Toque em 'CONFIAR' e digite seu codigo numerico de desbloqueio." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  [PASSO 2 - MODO DE DESENVOLVEDOR (IOS 16, 17, 18+)]:" -ForegroundColor Cyan
+            Write-Host "    1. Abra o aplicativo 'Ajustes' no iPhone." -ForegroundColor White
+            Write-Host "    2. Toque em 'Privacidade e Seguranca'." -ForegroundColor White
+            Write-Host "    3. Role ate o final da pagina e toque em 'Modo de Desenvolvedor'." -ForegroundColor White
+            Write-Host "    4. Ative a chave seletora e toque em 'Reiniciar'." -ForegroundColor Yellow
+            Write-Host "    5. Apos reiniciar, desbloqueie a tela, toque em 'Ativar' e digite a senha." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  [SOLUCAO DE PROBLEMAS NO IPHONE]:" -ForegroundColor Red
+            Write-Host "    Se a mensagem 'Confiar neste computador' nao aparecer ao plugar o cabo:" -ForegroundColor DarkGray
+            Write-Host "    No iPhone: Ajustes > Geral > Transferir ou Redefinir o iPhone > Redefinir >" -ForegroundColor DarkGray
+            Write-Host "    Toque em 'Redefinir Localizacao e Privacidade'. Desconecte e reconecte o cabo USB." -ForegroundColor DarkGray
+            Write-Host "  ========================================================================" -ForegroundColor Magenta
+        }
+        elseif ($m -match "samsung|galaxy|one\s*ui|a[0-9]|s[0-9]|m[0-9]|z\s*flip|z\s*fold|note") {
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  [GUIA PASSO A PASSO // SAMSUNG GALAXY (ONE UI)]" -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  1. Abra o aplicativo 'Configuracoes'." -ForegroundColor White
+            Write-Host "  2. Role ate o final e toque em 'Sobre o telefone'." -ForegroundColor White
+            Write-Host "  3. Toque em 'Informacoes do software'." -ForegroundColor White
+            Write-Host "  4. Toque 7 VEZES SEGUIDAS em 'Numero de compilacao'." -ForegroundColor Yellow
+            Write-Host "     (Se pedir senha ou padrao de tela, digite-a. Surgira: 'O modo de desenvolvedor foi ativado!')" -ForegroundColor DarkGray
+            Write-Host "  5. Volte duas vezes ate a tela principal de 'Configuracoes'." -ForegroundColor White
+            Write-Host "  6. No final da lista (abaixo de 'Sobre o telefone'), toque em 'Opcoes do desenvolvedor'." -ForegroundColor White
+            Write-Host "  7. Ative a chave 'Depuracao USB' e confirme em 'OK'." -ForegroundColor Green
+            Write-Host "  8. Conecte o cabo USB ao computador com a tela desbloqueada." -ForegroundColor White
+            Write-Host "  9. Na tela do celular, marque 'Sempre permitir a partir deste computador' e toque em 'Permitir'." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  * DICA SAMSUNG ONE UI 6 / 6.1+: Se tiver 'Bloqueador Automatico' (Auto Blocker) ativado em" -ForegroundColor Yellow
+            Write-Host "    Configuracoes > Seguranca e Privacidade, desative-o temporariamente para liberar o ADB." -ForegroundColor Yellow
+            Write-Host "  ========================================================================" -ForegroundColor Green
+        }
+        elseif ($m -match "xiaomi|redmi|poco|miui|hyper\s*os|black\s*shark") {
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  [GUIA PASSO A PASSO // XIAOMI, REDMI E POCO (MIUI / HYPEROS)]" -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  1. Abra o aplicativo 'Configuracoes'." -ForegroundColor White
+            Write-Host "  2. Toque em 'Sobre o telefone' (logo no topo)." -ForegroundColor White
+            Write-Host "  3. Toque 7 VEZES SEGUIDAS em 'Versao do SO' (HyperOS) ou 'Versao da MIUI'." -ForegroundColor Yellow
+            Write-Host "     (Surgira a mensagem: 'Voce agora e um desenvolvedor!')" -ForegroundColor DarkGray
+            Write-Host "  4. Volte para a tela inicial de 'Configuracoes' e toque em 'Configuracoes adicionais'." -ForegroundColor White
+            Write-Host "  5. Toque em 'Opcoes do desenvolvedor'." -ForegroundColor White
+            Write-Host "  6. Ative a chave 'Depuracao USB' (aguarde a contagem de 10s da Xiaomi e confirme)." -ForegroundColor Green
+            Write-Host "  7. [IMPORTANTE NA XIAOMI] Ative tambem:" -ForegroundColor Yellow
+            Write-Host "     - 'Instalar via USB'" -ForegroundColor Cyan
+            Write-Host "     - 'Depuracao USB (Configuracoes de Seguranca)'" -ForegroundColor Cyan
+            Write-Host "     (Nota: A Xiaomi exige chip SIM inserido e login na Conta Mi para essas duas chaves)." -ForegroundColor DarkGray
+            Write-Host "  8. Conecte o cabo USB, marque 'Sempre permitir' e toque em 'OK'." -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+        }
+        elseif ($m -match "motorola|moto|lenovo|edge|g[0-9]|e[0-9]") {
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  [GUIA PASSO A PASSO // MOTOROLA (MOTO G, EDGE, E, LENOVO)]" -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  1. Abra o aplicativo 'Configuracoes'." -ForegroundColor White
+            Write-Host "  2. Role ate o final e toque em 'Sobre o telefone' (ou 'Sistema > Sobre o telefone')." -ForegroundColor White
+            Write-Host "  3. Desca ate o final e toque 7 VEZES SEGUIDAS em 'Numero da versao'." -ForegroundColor Yellow
+            Write-Host "  4. Volte para 'Configuracoes > Sistema > Avancado > Opcoes do desenvolvedor'." -ForegroundColor White
+            Write-Host "  5. Ative a chave 'Depuracao USB' e confirme em 'OK'." -ForegroundColor Green
+            Write-Host "  6. Conecte o cabo USB ao computador." -ForegroundColor White
+            Write-Host "  7. Na tela do celular, marque 'Sempre permitir a partir deste computador' e toque em 'Permitir'." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  * DICA MOTOROLA: Se nao for detectado, abra a barra de notificacoes e mude de" -ForegroundColor Yellow
+            Write-Host "    'Apenas carregando' para 'Transferencia de arquivos (MTP)'." -ForegroundColor Yellow
+            Write-Host "  ========================================================================" -ForegroundColor Green
+        }
+        elseif ($m -match "realme|oppo|oneplus|color\s*os|oxygen") {
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  [GUIA PASSO A PASSO // REALME, OPPO E ONEPLUS (COLOROS / REALME UI)]" -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  1. Abra 'Configuracoes > Sobre o dispositivo > Versao'." -ForegroundColor White
+            Write-Host "  2. Toque 7 VEZES SEGUIDAS em 'Numero da versao' (Build number)." -ForegroundColor Yellow
+            Write-Host "  3. Volte para 'Configuracoes > Configuracoes adicionais (ou Configuracoes do sistema)'." -ForegroundColor White
+            Write-Host "  4. Toque em 'Opcoes do desenvolvedor'." -ForegroundColor White
+            Write-Host "  5. Ative a chave 'Depuracao USB' e confirme." -ForegroundColor Green
+            Write-Host "  6. Conecte o cabo USB e autorize a chave RSA do computador na tela." -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+        }
+        elseif ($m -match "qr|wifi|wi-fi|sem\s*fio") {
+            Show-AdbQrCodePairing -AdbPath $AdbPath
+            Pause-Cyber
+            continue
+        }
+        else {
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  [GUIA PASSO A PASSO // ANDROID GERAL (PIXEL, ASUS, LG, SONY, ETC.)]" -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+            Write-Host "  1. Abra o aplicativo 'Configuracoes'." -ForegroundColor White
+            Write-Host "  2. Toque em 'Sobre o telefone' (ou 'Sistema > Sobre o dispositivo')." -ForegroundColor White
+            Write-Host "  3. Toque 7 VEZES SEGUIDAS em 'Numero da versao' ou 'Numero de compilacao'." -ForegroundColor Yellow
+            Write-Host "     (Surgira a mensagem de confirmacao de desenvolvedor ativado)" -ForegroundColor DarkGray
+            Write-Host "  4. Volte e toque em 'Sistema > Opcoes do desenvolvedor'." -ForegroundColor White
+            Write-Host "  5. Ative a chave 'Depuracao USB' e confirme em 'OK'." -ForegroundColor Green
+            Write-Host "  6. Conecte o cabo USB ao computador com a tela desbloqueada." -ForegroundColor White
+            Write-Host "  7. Marque 'Sempre permitir a partir deste computador' e toque em 'Permitir'." -ForegroundColor Green
+            Write-Host "  ========================================================================" -ForegroundColor Green
+        }
+
+        # Opcao de QR Code para Android
+        if ($m -notmatch "iphone|apple|ios|ipad") {
+            Write-Host ""
+            Write-Host "  ========================================================================" -ForegroundColor Cyan
+            Write-Host "  [DEPURACAO SEM FIO VIA QR CODE - ANDROID 11+]" -ForegroundColor Cyan
+            Write-Host "  Disponivel em celulares modernos: conecte sem cabos via Wi-Fi!" -ForegroundColor DarkGray
+            Write-Host "  ========================================================================" -ForegroundColor Cyan
+            $qrResp = Read-Host "Deseja gerar o QR Code de Pareamento sem Fio na tela agora? [S/N]"
+            if ($qrResp -match "^[sS]$") {
+                Show-AdbQrCodePairing -AdbPath $AdbPath
+            }
+        }
+
+        Pause-Cyber
+    }
+}
+
 function Ensure-AdbConnection {
     param([string]$AdbPath)
     Write-Host "`n========================================================================" -ForegroundColor Cyan
@@ -2308,9 +2684,17 @@ function Ensure-AdbConnection {
     Write-Host "  [AVISO] Nenhum dispositivo Android autorizado detectado no momento." -ForegroundColor Yellow
     Write-Host "  [1] Ja conectei o Cabo USB e aceitei na tela -> Tentar detectar novamente" -ForegroundColor Green
     Write-Host "  [2] Conectar via ADB Sem Fio (Wi-Fi IP:Porta - Android 11+)" -ForegroundColor Cyan
+    Write-Host "  [3] Gerar QR Code para Pareamento Wi-Fi na Tela (Android 11+)" -ForegroundColor Yellow
+    Write-Host "  [4] Como ativar Depuracao no meu modelo de celular (Guia Interativo)" -ForegroundColor Magenta
     Write-Host "  [0] Continuar sem ADB (Modo Checklist / Auditoria de Rede)" -ForegroundColor DarkGray
-    $c = Read-Host "Escolha [0-2]"
-    if ($c -eq "1") {
+    $c = Read-Host "Escolha [0-4]"
+    if ($c -eq "3") {
+        Show-AdbQrCodePairing -AdbPath $AdbPath
+        return (Ensure-AdbConnection -AdbPath $AdbPath)
+    } elseif ($c -eq "4") {
+        Show-MobileDebugGuide -AdbPath $AdbPath
+        return (Ensure-AdbConnection -AdbPath $AdbPath)
+    } elseif ($c -eq "1") {
         $null = & $AdbPath kill-server 2>&1
         $null = & $AdbPath start-server 2>&1
         Start-Sleep -Seconds 1
@@ -2545,11 +2929,13 @@ function Invoke-MobileAndroid {
         Write-Host "  [7] Baixar / Atualizar ADB Portatil na pasta 'ADB ANDROID' do Pen Drive" -ForegroundColor DarkCyan
         Write-Host "  [8] REMOVER / DESINSTALAR PACOTE (APP) DO ANDROID (com instrucoes)" -ForegroundColor Red
         Write-Host "  [9] MOSTRAR PACOTES NATIVOS / SISTEMA DO ANDROID (bloatware e fabrica)" -ForegroundColor Yellow
+        Write-Host "  [10] Como ativar Depuracao USB / Parear via QR Code (Guia por Modelo)" -ForegroundColor Cyan
         Write-Host "  [0] Sair e encerrar processos Android/iPhone no Windows" -ForegroundColor DarkGray
         Write-Host "========================================================================" -ForegroundColor Yellow
-        $sub = Read-Host "Escolha uma opcao [0-9]"
+        $sub = Read-Host "Escolha uma opcao [0-10]"
 
         if ($sub -eq "0") { Stop-MobileBackgroundProcesses -AdbPath $adb; break }
+        elseif ($sub -eq "10") { Show-MobileDebugGuide -AdbPath $adb }
         elseif ($sub -eq "7") {
             $adb = Install-PortableAdb
             if ($adb) { $devId = Ensure-AdbConnection -AdbPath $adb }
@@ -2815,11 +3201,13 @@ function Invoke-MobileIphone {
         Write-Host "  [7] Baixar / Atualizar Ferramenta Portatil em 'LIBIMOBILEDEVICE IPHONE'" -ForegroundColor DarkCyan
         Write-Host "  [8] REMOVER / DESINSTALAR PACOTE (APP) DO IPHONE (com instrucoes)" -ForegroundColor Red
         Write-Host "  [9] MOSTRAR PACOTES NATIVOS / SISTEMA DO IPHONE (com.apple.*)" -ForegroundColor Yellow
+        Write-Host "  [10] Como conectar o iPhone (Tela 'Confiar neste Computador' e Modo Desenvolvedor)" -ForegroundColor Cyan
         Write-Host "  [0] Sair e encerrar processos Android/iPhone no Windows" -ForegroundColor DarkGray
         Write-Host "========================================================================" -ForegroundColor Magenta
-        $sub = Read-Host "Escolha uma opcao [0-9]"
+        $sub = Read-Host "Escolha uma opcao [0-10]"
 
         if ($sub -eq "0") { Stop-MobileBackgroundProcesses; break }
+        elseif ($sub -eq "10") { Show-MobileDebugGuide }
         elseif ($sub -eq "7") {
             $ipTools = Install-PortableIphoneTools
         }
@@ -3015,13 +3403,17 @@ function Invoke-Op18 {
         Write-Host ""
         Write-Host "  [1] ANDROID - Auditoria via ADB Portatil (pasta 'ADB ANDROID' - USB / Wi-Fi)" -ForegroundColor Green
         Write-Host "  [2] IPHONE (iOS) - Auditoria via 'LIBIMOBILEDEVICE IPHONE' + Rede e Blindagem" -ForegroundColor Magenta
+        Write-Host "  [3] COMO ATIVAR DEPURACAO / MODO DESENVOLVEDOR (Guia Interativo por Marca/Modelo)" -ForegroundColor Cyan
+        Write-Host "  [4] PAREAMENTO SEM FIO VIA QR CODE (Android 11+)" -ForegroundColor Yellow
         Write-Host "  [0] Voltar ao Menu Principal" -ForegroundColor DarkGray
         Write-Host "========================================================================" -ForegroundColor Yellow
-        $plat = Read-Host "Escolha a plataforma [0-2]"
+        $plat = Read-Host "Escolha a opcao [0-4]"
         if ($plat -eq "1") { Invoke-MobileAndroid }
         elseif ($plat -eq "2") { Invoke-MobileIphone }
+        elseif ($plat -eq "3") { Show-MobileDebugGuide -AdbPath (Resolve-AdbExe) }
+        elseif ($plat -eq "4") { Show-AdbQrCodePairing -AdbPath (Resolve-AdbExe); Pause-Cyber }
         elseif ($plat -eq "0") { Stop-MobileBackgroundProcesses; break }
-        else { Write-Host '  [SKIPPY // CP2077]: "Opcao invalida. Digite 1, 2 ou 0."' -ForegroundColor Red; Start-Sleep -Seconds 1 }
+        else { Write-Host '  [SKIPPY // CP2077]: "Opcao invalida. Digite de 0 a 4."' -ForegroundColor Red; Start-Sleep -Seconds 1 }
     }
 }
 
