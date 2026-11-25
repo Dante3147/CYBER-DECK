@@ -9,12 +9,12 @@
 
 <div align="center">
 
-**`// NIGHT CITY EDITION · v36.0 · POWERSHELL + CMD DUAL ENGINE //`**
+**`// NIGHT CITY EDITION · v39.0 · POWERSHELL + CMD DUAL ENGINE //`**
 
 [![License](https://img.shields.io/badge/LICENSE-Custom%20NC--NM-magenta?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDFMMy41IDUuNXYxM0wxMiAyM2w4LjUtNC41di0xM0wxMiAxem0wIDJsMy41IDEuODVMMTIgNy4xNSA4LjUgNS4zNSAxMiAzbTYuNSA0di4xbC01LjUgMi45MlY5bDUuNSAyLjkydjExTDEyIDIxbC02LjUtMy40OVY2LjA4TDEyIDMuMThsMTYuNS0xLjU1LjV6Ii8+PC9zdmc+)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/PLATAFORMA-Windows%2010%2F11-00d4ff?style=for-the-badge&logo=windows)](https://github.com/Dante3147/CYBER-DECK)
 [![Engine](https://img.shields.io/badge/ENGINE-PowerShell%20%2B%20CMD-ff2d78?style=for-the-badge&logo=powershell)](https://github.com/Dante3147/CYBER-DECK)
-[![Version](https://img.shields.io/badge/VERSION-v36.0-39ff14?style=for-the-badge)](https://github.com/Dante3147/CYBER-DECK)
+[![Version](https://img.shields.io/badge/VERSION-v39.0-39ff14?style=for-the-badge)](https://github.com/Dante3147/CYBER-DECK)
 [![Portable](https://img.shields.io/badge/MODO-Portátil%20USB-ff8c00?style=for-the-badge)](https://github.com/Dante3147/CYBER-DECK)
 
 </div>
@@ -31,22 +31,17 @@
 
 **CYBER-DECK** é uma suíte de manutenção, segurança e otimização para Windows, construída com a estética visual do universo **Cyberpunk 2077 / Edgerunners**. Funciona como um **painel de controle portátil** que roda diretamente de um Pen Drive ou SSD externo — sem precisar instalar nada no sistema do usuário.
 
-Tudo o que você precisa para blindar, limpar, otimizar e fazer backup do seu sistema está em **um único lugar**, com interface interativa no terminal, diálogos dos personagens do universo Cyberpunk e suporte total a **Android e iPhone**.
+Tudo o que você precisa para blindar, limpar, otimizar, recuperar arquivos e fazer backup do seu sistema está em **um único lugar**, com interface interativa no terminal, diálogos temáticos e suporte total a **Android e iPhone**.
 
 ---
 
-## ◈ COMO EXECUTAR
+## ◈ NOVIDADES DA VERSÃO v39.0
 
-```
-📁 CYBER-DECK\
- └── Iniciar_Painel_PowerShell.bat   ← CLIQUE AQUI (Recomendado)
- └── Painel_Manutencao_PC.bat        ← Alternativa CMD puro
- └── Painel_Manutencao_PC.ps1        ← Script PowerShell direto
-```
-
-> **`[VIKTOR VEKTOR]:`** *"Clique com botão direito → Executar como Administrador. Sem privilégio de root não tem cirurgia."*
-
-**Pré-requisito:** Windows 10 ou 11 · PowerShell 5.1+ · Executar como **Administrador**
+- 📱 **Guia Interativo de Depuração Mobile (Opção 18):** Instruções passo a passo customizadas por marca e modelo (Samsung One UI, Xiaomi HyperOS/MIUI, Motorola, iPhone iOS 12 ao 18+, Realme/OPPO/OnePlus, Google Pixel, Asus e genéricos).
+- 📶 **Pareamento ADB sem fio via QR Code (Android 11+):** Interface tática militar HUD Cyberpunk 2077 com cantos chanfrados, proporção 1:1 quadrada (sem esticar), retículos luminosos e suporte a temas corporativos dinâmicos (**Arasaka**, **Trauma Team**, **Militech**, **Kang Tao**, **Netwatch** e **Afterlife**).
+- 💾 **Recuperação de Arquivos Deletados e Partições (Opção 22):** Integração com **PhotoRec** e **TestDisk** portáteis dentro de `PROGRAMAS BACKUP\PhotoRec` e `TestDisk`. Inclui o visual **QPhotoRec** com janelas e mouse, com pasta de destino automática em `Desktop\DADOS` e no Pen Drive.
+- ⚡ **Auto-Update Seguro do BAT:** Atualizador desanexado via script temporário para impedir que o `cmd.exe` leia offsets de bytes corrompidos ao sobrescrever o `.bat` em execução.
+- 🔢 **Menu Principal 100% Ordenado:** Sequência estrita e contínua de 1 a 22, sem opções fora de ordem.
 
 ---
 
@@ -88,198 +83,85 @@ Tudo o que você precisa para blindar, limpar, otimizar e fazer backup do seu si
 | Nº | Função | Descrição |
 |---|---|---|
 | `11` | **Reset Completo de Rede e DNS** | Reinicia configurações de rede, Winsock e DNS corrompidos |
-| `12` | **Ponto de Restauração** | Cria ponto de restauração do sistema (Backup de Engrama) |
-| `13` | **Backup de Programas** | Exporta a lista completa de programas instalados via Winget (`.json`) + tutorial de reinstalação |
-| `14` | **Scan Anti-Malware** | Varredura via Windows Defender com monitor ao vivo (CPU/RAM/timer) — detecta malware, ransomware, backdoors e ngrok |
+| `12` | **Ponto de Restauração** | Cria ponto de restauração do sistema (Backup de Engrama / Mikoshi) |
+| `13` | **Backup da Lista de Programas** | Exporta a lista completa de programas instalados via Winget (`.json`) + tutorial de reinstalação |
+| `14` | **Scan Anti-Malware / Blackwall** | Varredura via Windows Defender com monitor ao vivo — detecta malware, ransomware, backdoors e túneis ngrok/cloudflared |
 | `15` | **Auditoria de Telemetria** | Desativa/reativa serviços de telemetria da Microsoft de forma interativa |
-| `16` | **Overclock Neural / Otimização** | Auditoria de otimizações do Windows + **Limpeza Profunda de Registros Órfãos** (AppData, ProgramData, Regedit) |
+| `16` | **Overclock Neural / Limpeza Profunda** | Limpeza de registros órfãos, AppData, LocalLow e ProgramData |
+| `17` | **Backup de Navegadores** | Exporta Favoritos, Perfis e guia de senhas — Chrome, Edge, Brave, Opera, Firefox, etc. |
 
 ---
 
-### 📱 `[SEGURANÇA MOBILE]`
+### 📱 `[SEGURANÇA DE CELULARES ANDROID E IPHONE]`
 
 | Nº | Função | Descrição |
 |---|---|---|
-| `17` | **Backup de Navegadores** | Exporta Favoritos (`.html` com datas), Perfis e guia de exportação de Senhas — suporta Chrome, Edge, Brave, Opera, Opera GX, Vivaldi e Firefox |
-| `18` | **Segurança Android & iPhone** | Terminal completo com ADB (Android) e libimobiledevice (iPhone) em **modo portátil** |
+| `18` | **Auditoria Mobile & Depuração** | Suíte completa com ADB portátil (Android) e libimobiledevice (iPhone) + Guia passo a passo por marca/modelo e Pareamento QR Code |
 
-#### Sub-menu Android (ADB via USB ou Wi-Fi):
-- `[1]` Apps nocivos e assinaturas suspeitas
-- `[2]` Scan de vírus, malware, ransomware, mineradores e botnets
-- `[3]` Arquivos criptografados maliciosos (fotos/PDFs falsos, `.apk`, `.enc`)
-- `[4]` Apps com permissões indevidas (Acessibilidade, Overlay, SMS)
-- `[5]` Certificados raiz MITM, VPN/DNS, portas ADB e Play Protect
-- `[6]` Informações do dispositivo
-- `[7]` Baixar ADB Portátil (download automático das platform-tools do Google)
-- `[8]` Remover / Desinstalar pacote (app)
-- `[9]` Listar pacotes nativos do sistema / bloatware
-
-#### Sub-menu iPhone (libimobiledevice):
-- Auditoria de rede local iOS
-- Checklist guiado de segurança
-- Listar e remover apps por Bundle ID
-- Download automático do libimobiledevice portátil
+- `[1]` Android — Auditoria via ADB Portátil (USB e Wi-Fi)
+- `[2]` iPhone (iOS) — Auditoria via libimobiledevice e rede
+- `[3]` **Como Ativar Depuração / Modo Desenvolvedor** — Guia interativo (Samsung, Xiaomi, Motorola, iPhone, Realme, Pixel, etc.)
+- `[4]` **Pareamento sem fio via QR Code (Android 11+)** — HUD tático com temas corporativos (Arasaka, Trauma Team, etc.)
 
 ---
 
-### 🛡️ `[PROTOCOLOS DE CRIPTOGRAFIA]`
+### 🛡️ `[CRIPTOGRAFIA E COFRE DE DISCOS]`
 
 | Nº | Função | Descrição |
 |---|---|---|
-| `19` | **Criptografia de Discos e Pendrives** | **BitLocker** (AES-256 / XTS-AES-256 + TPM) e **VeraCrypt** portátil — com backup automático da chave de recuperação de 48 dígitos |
-
-#### Recursos do módulo 19:
-- BitLocker To Go para Pen Drives e HDs Externos
-- BitLocker para discos internos (C:, D:, E:) com suporte a TPM
-- Consultar status, extrair chave, desbloquear e descriptografar
-- Integração com **VeraCrypt** open-source (funciona no Windows Home e Linux)
+| `19` | **Criptografia de Discos e Pen Drives** | **BitLocker To Go** (AES-256) nativo + **VeraCrypt** portátil com backup da Chave de Recuperação |
 
 ---
 
-### 🌐 `[SEGURANÇA ONLINE]`
+### 🌐 `[SEGURANÇA ONLINE E VAZAMENTO DE DADOS]`
 
 | Nº | Função | Descrição |
 |---|---|---|
-| `20` | **Verificador de Vazamento de Dados** | 100% gratuito, sem chave de API |
-
-#### Sub-menu:
-- `[1]` **Senhas vazadas** — via Have I Been Pwned (k-Anonymity, hash local SHA-1)
-- `[2]` **E-mails vazados** — API XposedOrNot + atalhos para HIBP, DeHashed e Mozilla Monitor
-- `[3]` **Auditoria DNS Anti-Phishing** — verificação SPF/DMARC do PC
-- `[4]` **Guia de Blindagem Online** — Bitwarden, KeePassXC, 2FA sem SMS, aliases de e-mail
+| `20` | **Auditoria de Vazamentos** | Verificação de senhas via *k-Anonymity* (HIBP), consulta de e-mails vazados (XposedOrNot), teste de DNS anti-phishing e guia de blindagem |
 
 ---
 
-### 🚀 `[ATUALIZAÇÕES DO CYBERDECK]`
+### 🚀 `[ATUALIZAÇÕES E RECUPERAÇÃO DE DADOS]`
 
 | Nº | Função | Descrição |
 |---|---|---|
-| `21` | **Central de Atualizações (GitHub)** | Verificação automática no boot, download com barra de progresso (%) e histórico completo de alterações |
-
-#### Sub-menu da Opção 21:
-- `[1]` **Baixar e Instalar Atualização** — download via GitHub com porcentagem real, extração automática e reinício do script
-- `[2]` **Ver o que foi alterado (Changelog)** — histórico completo de todas as novidades desde a versão inicial
-- `[0]` **Voltar ao Menu Principal**
+| `21` | **Central de Atualizações** | Verifica a versão mais recente no GitHub, exibe changelog detalhado e aplica atualizações automaticamente |
+| `22` | **Recuperação de Arquivos e Partições** | Central portátil com **PhotoRec** (recuperação de fotos, vídeos e arquivos deletados) e **TestDisk** (reparador de partições e discos RAW) |
 
 ---
 
-### ⚙️ `[ATALHOS DE ROTINA]`
+## ◈ PROTOCOLOS ESPECIAIS
 
-| Código | Função |
+| Código | Ação |
 |---|---|
-| `99` | **Rotina Rápida** — executa Opções 1 + 4 + 8 em sequência |
-| `88` | **Trocar Corporação** — muda o tema/personagem do painel |
-| `0` | **Sair** — encerra todos os processos (ADB, libimobiledevice) com segurança |
+| `99` | **Rotina Rápida Afterlife** — Executa em sequência: Atualizar Apps (`01`) + Limpar Temp (`04`) + Otimizar Discos (`08`) |
+| `88` | **Trocar de Corporação** — Altera o tema visual (Arasaka, Militech, Kang Tao, Netwatch, Afterlife, Trauma Team) |
+| `0` | **Desconectar do CyberDeck** — Encerra todos os processos mobile em segundo plano (adb, fastboot, idevice) e sai |
 
 ---
 
-## ◈ ESTRUTURA DE PASTAS
+## ◈ ESTRUTURA DOS BACKUPS E DADOS (PORTÁTIL)
 
-```
-📁 CYBER-DECK\
-├── 🟢 Iniciar_Painel_PowerShell.bat         ← Launcher principal
-├── 🟡 Painel_Manutencao_PC.bat              ← Launcher CMD
-├── 🔵 Painel_Manutencao_PC.ps1             ← Script PowerShell v36.0
-│
-├── 📁 ADB ANDROID\                          ← ADB portátil (auto-download)
-│   └── adb.exe, fastboot.exe, DLLs...
-│
-├── 📁 LIBIMOBILEDEVICE IPHONE\              ← iOS tools portáteis (auto-download)
-│   └── idevice_id.exe, ideviceinfo.exe...
-│
-├── 📁 VERACRYPT PORTATIL\                   ← VeraCrypt em modo portátil
-│   └── VeraCrypt.exe (extrair manualmente)
-│
-├── 📁 DADOS\                                ← Backups organizados por data
-│   └── 📁 BACKUP - DD-MM-AAAA\
-│       ├── BACKUPS-PROGRAMAS\               ← Opção 13
-│       ├── BACKUP DADOS NAVEGADORES\        ← Opção 17
-│       ├── BACKUP_LIMPEZA_REGISTRO_ORFAOS\  ← Opção 16
-│       ├── RELATORIOS_LIMPEZA_REGISTRO\     ← Opção 16
-│       ├── RELATORIOS_HARDWARE\             ← Opção 10
-│       └── CHAVES_RECUPERACAO_BITLOCKER\    ← Opção 19
-│
-└── 📁 scripts_individuais_powershell\       ← Scripts avulsos .ps1
-└── 📁 scripts_individuais_cmd\              ← Scripts avulsos .bat
-```
+Todos os backups gerados pelo CYBER-DECK são organizados por data em duas pastas simultâneas:
+1. **Na Área de Trabalho:** `%USERPROFILE%\Desktop\DADOS\BACKUP - DD-MM-AAAA\`
+2. **Espelho Portátil no Pen Drive / Projeto:** `CYBER-DECK\DADOS\BACKUP - DD-MM-AAAA\`
+
+Pastas automáticas de destino:
+* `BACKUPS-PROGRAMAS\` — Listas do Winget e scripts de restauração
+* `BACKUP DADOS NAVEGADORES\` — Favoritos e perfis dos navegadores
+* `CHAVES_RECUPERACAO_BITLOCKER\` — Chaves de recuperação de 48 dígitos
+* `RELATORIOS_HARDWARE\` — Relatórios de bateria (.html) e saúde SMART
+* `RECUPERACAO_DADOS_PHOTOREC_TESTDISK\` — Destino padrão para salvar fotos e arquivos recuperados
 
 ---
 
-## ◈ MODO PORTÁTIL (PEN DRIVE / SSD EXTERNO)
+## ◈ CRÉDITOS E AVISO LEGAL
 
-> **`[LUCY // Edgerunners]:`** *"Todo o kit cabe num pen drive. Sem rastro no sistema."*
+* **Criador:** Adonis Peixoto (Dante3147)
+* **Discord:** `dante_3147`
+* **E-mail:** `suporte@dante3147.anonaddy.me`
+* **Repositório:** [https://github.com/Dante3147/CYBER-DECK](https://github.com/Dante3147/CYBER-DECK)
 
-O **CYBER-DECK** foi projetado para funcionar **100% portátil**:
-
-- ✅ **ADB Android** — baixado automaticamente para a pasta `ADB ANDROID\`
-- ✅ **libimobiledevice iPhone** — baixado para `LIBIMOBILEDEVICE IPHONE\`
-- ✅ **VeraCrypt** — extraído para `VERACRYPT PORTATIL\`
-- ✅ **Backups** — espelhados em `DADOS\` no próprio pen drive
-- ✅ **Nenhuma instalação necessária** no computador host
-
-Copie a pasta inteira para um pen drive e leve com você para qualquer máquina Windows.
-
----
-
-## ◈ PERSONAGENS DO UNIVERSO CYBERPUNK
-
-O painel inclui diálogos e falas de personagens de **Cyberpunk 2077** e **Cyberpunk: Edgerunners**:
-
-<div align="center">
-
-| Personagem | Universo | Função no Script |
-|---|---|---|
-| `Johnny Silverhand` | CP2077 | Boot e mensagens de ação |
-| `Songbird` | CP2077 | Conexão e status de rede |
-| `Viktor Vektor` | CP2077 | Hardware e manutenção |
-| `David Martinez` | Edgerunners 1 | Desempenho e velocidade |
-| `Lucy` | Edgerunners 1 | Segurança e furtividade |
-| `Solomon Reed` | CP2077 | Privilégios e admin |
-| `Capri` | Edgerunners 2 | Boot e sensores |
-| `D` | Edgerunners 2 | Comandos furtivos |
-| `Weak 'King' Kingsley` | Edgerunners 2 | Estabilidade |
-| `Roman Carax` | Edgerunners 2 | GPU e gráficos |
-
-</div>
-
----
-
-## ◈ LICENÇA
-
-Este projeto está licenciado sob a **CYBER-DECK Custom License** — uma licença personalizada que:
-
-- ✅ Permite uso pessoal e distribuição gratuita
-- ✅ Permite modificações com a mesma licença mantida
-- ❌ **Proíbe** venda, comercialização ou lucro com o projeto
-- ❌ **Proíbe** uso para fins maliciosos, ilegais ou prejudiciais
-- ⚠️ **Isenta** o autor de qualquer responsabilidade por uso indevido
-
-> O uso indevido é de **inteira responsabilidade do usuário final**.
-
-Leia o arquivo [LICENSE.md](LICENSE.md) completo — disponível em **Português**, **Inglês** e **Espanhol**.
-
----
-
-## ◈ AVISO LEGAL
-
-> [!CAUTION]
-> Este software é fornecido para fins educacionais e de manutenção pessoal. O autor **não se responsabiliza** por danos causados pelo uso indevido, mal-intencionado ou incorreto das ferramentas aqui disponibilizadas. **Use com responsabilidade.**
-
----
-
-<div align="center">
-
-```
-╔══════════════════════════════════════════════════════════════╗
-║  CYBER-DECK OS v36.0 // NIGHT CITY EDITION                  ║
-║  "The street finds its own uses for things." — W. Gibson    ║
-╚══════════════════════════════════════════════════════════════╝
-```
-
-**Made with 🩸 and ☕ in Night City · © 2026 Adonis (Dante3147)**
-
-[![GitHub](https://img.shields.io/badge/GitHub-Dante3147-39ff14?style=flat-square&logo=github)](https://github.com/Dante3147)
-[![Discord](https://img.shields.io/badge/Discord-dante__3147-7289da?style=flat-square&logo=discord)](https://discord.com/users/687855066065272983)
-[![Email](https://img.shields.io/badge/Email-suporte%40dante3147.anonaddy.me-ff0055?style=flat-square&logo=maildotru)](mailto:suporte@dante3147.anonaddy.me)
-
-</div>
+> ⚠️ **AVISO LEGAL:**
+> Este software foi desenvolvido estritamente para **fins educacionais e de uso pessoal**.
+> **COMERCIALIZAÇÃO ESTRITAMENTE PROIBIDA.** Todos os direitos do universo Cyberpunk 2077 pertencem à CD PROJEKT RED.

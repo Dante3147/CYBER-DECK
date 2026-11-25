@@ -1,289 +1,79 @@
 ========================================================================
-  CYBERDECK OS v36.0 // DUAL ENGINE + PASTA DADOS DATADA (CP2077)
+  CYBERDECK OS v39.0 // SUITE DE MANUTENCAO E SEGURANCA (CP2077)
 ========================================================================
 
-NOVIDADES DA VERSAO v36 (REMOCAO EM LOTE DE PASTAS ORFAS POR ENTER OR INTERVALO):
-- Na limpeza de pastas orfas (%APPDATA% / %LOCALAPPDATA% / LocalLow /
-  ProgramData), agora ao apertar ENTER direto (ou digitar 'T'), ou ao
-  digitar um intervalo com '-' (ex: 1-221), o script seleciona e
-  remove todas as pastas escolhidas em lote (com confirmacao de
-  seguranca para lotes grandes e cancelamento por 'C' ou 'N').
+NOVIDADES DA VERSAO v39.0:
+- NOVO MODULO 22: Central de Recuperacao de Dados portatil com PhotoRec
+  e TestDisk armazenados em 'PROGRAMAS BACKUP\PhotoRec' e 'TestDisk'.
+  Inclui versao grafica com janelas (QPhotoRec) para recuperar fotos,
+  videos e documentos deletados, e TestDisk para particoes perdidas/RAW.
+  Destino integrado automaticamente em Desktop\DADOS e no Pen Drive.
+- NOVO GUIA INTERATIVO MOBILE (Opcao 18): Instrucoes passo a passo
+  detalhadas por marca e modelo (Samsung, Xiaomi, Motorola, iPhone iOS,
+  Realme, OPPO, OnePlus, Google Pixel, Asus e genericos).
+- PAREAMENTO ADB VIA QR CODE (Android 11+): Tela tatica militar HUD
+  Cyberpunk 2077 com proporcao 1:1 travada (sem esticar), scanlines,
+  reticulos nos cantos e temas corporativos dinamicos (Arasaka,
+  Trauma Team, Militech, Kang Tao, Netwatch e Afterlife).
+- CORRECAO DO AUTO-UPDATE (.BAT): Sistema de atualizacao desanexado via
+  script temporario externo para impedir leitura corrompida de offsets no
+  cmd.exe e evitar saltos involuntarios de comandos.
+- REORDENACAO NUMERICA DO MENU: Menu principal 100% sequencial de 1 a 22.
 
-NOVIDADES DA VERSAO v35 (ENCERRAMENTO DE ADB.EXE E IPHONE AO SAIR OU FECHAR NO X):
-- Encerramento forcado com arvore de processos ('taskkill /F /IM ... /T')
-  de 'adb.exe', 'fastboot.exe' e ferramentas do iPhone ('idevice_id.exe',
-  'ideviceinfo.exe', 'ideviceinstaller.exe', 'iproxy.exe', etc.) tanto
-  ao sair pelo menu/script quanto ao fechar a janela pelo botao [X].
+MAPA DE OPCOES DO CYBERDECK (1 a 22):
+  [ATUALIZACOES E DRIVERS]
+    1. Atualizar todos os programas (Winget)
+    2. Verificar / Atualizar Placa de Video (NVIDIA / AMD)
+    3. Gerenciador de Dispositivos (Drivers)
 
-CORRECAO DA VERSAO v34:
-- Corrigida a listagem de pacotes Android nas Opcoes [1], [8] e [9] via
-  'Get-AndroidPackagesSafe': agora resolve automaticamente o ID ativo
-  em 'adb devices' (USB ou Wi-Fi mDNS) caso a variavel de sessao
-  estivesse vazia ou desalinhada, e trata saidas em linha unica ou
-  sem prefixo 'package:', exibindo todos os pacotes instalados ao
-  pressionar ENTER no filtro.
+  [LIMPEZA DE ICE E INTEGRIDADE NEURAL]
+    4. Limpar Arquivos Temporarios (Temp)
+    5. Reparar Windows (DISM + SFC)
+    6. Limpar Cache do Windows Update
+    7. Limpar Cache de Shaders (DirectX / NVIDIA / AMD)
 
-NOVIDADES DA VERSAO v33 (ORGANIZACAO DATADA NA AREA DE TRABALHO E PEN DRIVE):
-- Na Area de Trabalho, todos os backups, relatorios e chaves agora sao
-  centralizados dentro de:
-    Desktop\DADOS\BACKUP - DD-MM-AAAA\
-- E espelhados automaticamente na mesma estrutura datada dentro do
-  projeto (Pen Drive / SSD Externo):
-    DADOS\BACKUP - DD-MM-AAAA\
-- Subpastas direcionadas automaticamente dentro da pasta da data:
-    * BACKUPS-PROGRAMAS\              (Opcao 13 - Winget)
-    * BACKUP DADOS NAVEGADORES\       (Opcao 17 - Navegadores)
-    * BACKUP_LIMPEZA_REGISTRO_ORFAOS\ (Opcao 16 - Backups .reg)
-    * RELATORIOS_LIMPEZA_REGISTRO\    (Opcao 16 - Relatorios .txt)
-    * RELATORIOS_HARDWARE\            (Opcao 10 - Bateria .html)
-    * CHAVES_RECUPERACAO_BITLOCKER\   (Opcao 19 - Chaves .txt)
+  [DESEMPENHO E CROMO (HARDWARE)]
+    8. Otimizacao Inteligente de Discos (SSD=TRIM / HD=Defrag)
+    9. Modo Sandevistan (Energia: Desempenho Maximo)
+   10. Diagnostico de Cromo: Saude SMART e Bateria
 
-NOVIDADES DA VERSAO v32 (ESPELHAMENTO AUTOMATICO NA PASTA 'DADOS\'):
-- Alem de salvar na Area de Trabalho do PC, o projeto inteiro agora
-  cria e organiza automaticamente a pasta 'DADOS\' na raiz do projeto
-  (Pen Drive ou SSD Externo), direcionando cada backup e relatorio para
-  sua subpasta especifica:
-    * DADOS\BACKUPS-PROGRAMAS\              (Opcao 13 - Winget)
-    * DADOS\BACKUP DADOS NAVEGADORES\       (Opcao 17 - Navegadores)
-    * DADOS\BACKUP_LIMPEZA_REGISTRO_ORFAOS\ (Opcao 16 - Backups .reg)
-    * DADOS\RELATORIOS_LIMPEZA_REGISTRO\    (Opcao 16 - Relatorios .txt)
-    * DADOS\RELATORIOS_HARDWARE\            (Opcao 10 - Bateria .html)
-    * DADOS\CHAVES_RECUPERACAO_BITLOCKER\   (Opcao 19 - Chaves .txt)
+  [NETRUNNING, SEGURANCA E PRIVACIDADE]
+   11. Reset Completo de Rede e DNS
+   12. Criar Ponto de Restauracao (Mikoshi)
+   13. Backup da Lista de Programas (Winget Export)
+   14. Barreira Blackwall: Malware, Backdoors, ngrok e Scans
+   15. Modo Fantasma: Auditoria Interativa de Telemetria
+   16. Overclock Neural: Limpeza Regedit/%APPDATA%
+   17. Backup de Navegadores (Favoritos, Senhas e Perfis)
 
-NOVIDADES DA VERSAO v31:
-- ENCERRAMENTO AUTOMATICO DE PROCESSOS MOBILE NO WINDOWS (OPCAO 18):
-  Ao selecionar [0] para sair do terminal Android, do terminal iPhone
-  ou do seletor mobile, o CyberDeck executa automaticamente:
-    * 'adb kill-server' + encerramento limpo de adb.exe / fastboot.exe;
-    * Encerramento de qualquer processo ativo do libimobiledevice
-      (idevice_id, ideviceinfo, ideviceinstaller, iproxy, etc.) ou
-      executavel rodando das pastas 'ADB ANDROID' e
-      'LIBIMOBILEDEVICE IPHONE', liberando o Pen Drive para ejecao
-      segura sem processos presos em segundo plano.
+  [SEGURANCA DE CELULARES ANDROID E IPHONE]
+   18. Auditoria Mobile: Apps Nocivos, Malware, Guia por Marca e QR Code
 
-NOVIDADES DA VERSAO v30:
-- NOVA OPCAO 20 [SEGURANCA ONLINE E VAZAMENTO DE DADOS] (100% GRATUITA):
-  * [1] Verificador de SENHAS vazadas via Have I Been Pwned (k-Anonymity):
-        100% gratis, sem chave de API, senha oculta na digitacao, hash
-        SHA-1 calculado localmente (apenas os 5 primeiros caracteres
-        trafegam pela internet) + avaliacao local de forca.
-  * [2] Verificador de E-MAILS vazados: consulta automatica gratuita na
-        API publica XposedOrNot direto no terminal + atalhos gratuitos
-        no navegador (Have I Been Pwned, DeHashed e Mozilla Monitor) com
-        copia automatica do e-mail para Ctrl+V.
-  * [3] Auditoria de DNS Anti-Phishing do PC + verificacao SPF/DMARC.
-  * [4] Guia interativo de Blindagem Online (Bitwarden, KeePassXC
-        portatil, 2FA sem SMS, aliases de e-mail e portais de seguranca).
+  [CRIPTOGRAFIA E COFRE DE DISCOS]
+   19. Criptografar Pen Drives e Discos (BitLocker + VeraCrypt)
 
-NOVIDADES DA VERSAO v29:
-- OPCAO 18 (ANDROID E IPHONE) agora inclui a Opcao [9] MOSTRAR PACOTES
-  NATIVOS / DO SISTEMA em ambas as plataformas (com filtro por palavra-
-  chave opcional):
-    * Android: lista os pacotes pre-instalados de fabrica/bloatware via
-      'pm list packages -s'.
-    * iPhone: lista os Bundle IDs nativos do iOS ('com.apple.*') via
-      'ideviceinstaller -l -o list_system' (e guia de referencia offline).
-- A Opcao [8] (Remover Pacote) em Android e iPhone tambem agora permite
-  escolher listar apps de Terceiros, Nativos/Sistema ou Todos antes de
-  digitar o pacote para remover.
+  [SEGURANCA ONLINE E VAZAMENTO DE DADOS]
+   20. Auditoria de Vazamentos: Senhas (k-Anonymity) e E-mails
 
-NOVIDADES DA VERSAO v28:
-- OPCAO 18 (ANDROID E IPHONE) agora inclui a Opcao [8] REMOVER /
-  DESINSTALAR PACOTE (APP) em ambas as plataformas, exibindo a
-  mensagem 'DIGITE UM PACOTE PARA REMOVER' seguida das instrucoes
-  especificas para Android (adb uninstall / pm uninstall --user 0 +
-  remocao manual + bloqueio de pacotes criticos) ou iPhone (Bundle ID
-  via ideviceinstaller -U + remocao manual e perfis MDM).
-- Corrigido o retorno do pareamento Wi-Fi ADB (Ensure-AdbConnection)
-  para nao misturar mensagens do 'adb pair/connect' no ID do aparelho
-  e detectar automaticamente quando o mDNS ja conecta apos o pareamento.
+  [ATUALIZACOES DO CYBERDECK]
+   21. Central de Atualizacoes (GitHub Auto-Update)
 
-NOVIDADES DA VERSAO v27:
-- OPCAO 16 (OVERCLOCK NEURAL / OTIMIZACAO) agora possui submenu com a
-  nova ferramenta de LIMPEZA PROFUNDA DE REGISTROS VELHOS E SOBRAS DE
-  PROGRAMAS DESINSTALADOS (Regedit + Windows inteiro + %APPDATA%):
-    * [1] Regedit Uninstall orfaos (HKLM / WOW6432Node / HKCU) com
-          backup automatico .reg na Area de Trabalho antes de apagar.
-    * [2] Regedit App Paths e MuiCache orfaos (executaveis removidos)
-          com backup .reg automatico.
-    * [3] Pastas orfas em %APPDATA%, %LOCALAPPDATA%, AppData\LocalLow
-          e C:\ProgramData (com lista de protecao do sistema/drivers/
-          apps instalados e selecao manual por numero para nao apagar
-          saves ou configs importantes por engano).
-    * [4] Relatorio completo somente-leitura (com exportacao .txt).
+  [RECUPERACAO E BACKUP DE DADOS]
+   22. Recuperacao de Arquivos e Particoes: PhotoRec + TestDisk
 
-NOVIDADES DA VERSAO v26:
-- BARRA DE PROGRESSO COM PORCENTAGEM REAL (0% a 100%) nos downloads
-  portateis do ADB ANDROID e do LIBIMOBILEDEVICE IPHONE:
-    Exibe barra visual [####----------------] 20%, tamanho em MB
-    baixado/total, velocidade atual (KB/s ou MB/s), status de extracao
-    e confirmacao final com o caminho e tamanho do executavel salvo na
-    pasta raiz do projeto (alem de deixar o download bem mais rapido
-    que o Invoke-WebRequest padrao do PowerShell).
+  [PROTOCOLOS ESPECIAIS]
+   99. Rotina Rapida (1 + 4 + 8)
+   88. Trocar Corporacao / Faccao
+    0. Sair e Limpar Processos Mobile
 
-NOVIDADES DA VERSAO v25:
-- NOVA OPCAO 19 [CRIPTOGRAFIA E COFRE DE DISCOS]:
-  * Suporte a BitLocker To Go (Pen Drives/HDs Externos com AES-256) e
-    BitLocker para discos internos (C:, D:, E: com XTS-AES-256 + TPM).
-  * Backup AUTOMATICO da Chave de Recuperacao de 48 digitos em .txt na
-    Area de Trabalho (CHAVES_RECUPERACAO_BITLOCKER\) fora do disco
-    criptografado, alem de confirmacao explicita ('SIM') para evitar
-    criptografia acidental.
-  * Opcoes para consultar status, extrair chave, desbloquear (Unlock)
-    e descriptografar (manage-bde -off).
-  * Integracao com VeraCrypt (open-source) e pasta 'VERACRYPT PORTATIL\'
-    para funcionar tambem no Windows Home e em sistemas Linux.
+PASTA DADOS (ORGANIZACAO DATADA):
+  Tudo o que e gerado fica centralizado em:
+  - Area de Trabalho: Desktop\DADOS\BACKUP - DD-MM-AAAA\
+  - Espelho no Pen Drive: CYBER-DECK\DADOS\BACKUP - DD-MM-AAAA\
 
-NOVIDADES DA VERSAO v24 (MODO PORTATIL PARA PEN DRIVE):
-- Criadas duas pastas dedicadas na raiz do projeto:
-    * ADB ANDROID\             -> recebe o adb.exe oficial do Google
-      (platform-tools) em modo 100% portatil, sem instalar no Windows.
-    * LIBIMOBILEDEVICE IPHONE\ -> recebe o libimobiledevice portatil
-      para leitura USB de iPhones (idevice_id / ideviceinfo).
-- Corrigido o loop que perguntava para instalar o ADB toda vez ao
-  voltar e entrar novamente na opcao Android: agora o script busca
-  primeiro na pasta 'ADB ANDROID' do projeto (e tambem nos links do
-  WinGet) e memoriza se voce optou por seguir sem instalar na sessao.
-
-ATUALIZACAO DA VERSAO v23:
-- Renumerada a categoria [SEGURANCA DE CELULARES ANDROID E IPHONE] de
-  33 para a OPCAO 18 (seguindo a sequencia numerica exata de 1 a 18 no
-  Painel CMD, no Painel PowerShell e nos scripts individuais).
-  * Seletor de plataforma: Android (ADB via Cabo USB ou Depuracao sem
-    fio Wi-Fi, com instalacao automatica opcional do Google.PlatformTools)
-    e iPhone (iOS - auditoria de rede local + checklist guiado).
-  * Submenu completo com dialogos dos personagens (David, Lucy, Songbird,
-    Alt Cunningham, Viktor Vektor, River Ward, D, Talia, Solomon Reed,
-    Capri, Hanako Arasaka, Takemura, Weak Kingsley, Judy e Johnny):
-      [1] Apps nocivos (pacotes externos e assinaturas suspeitas)
-      [2] Virus, malware, ransomware, mineradores e botnets (CPU/Rede/Admin)
-      [3] Arquivos criptografados maliciosos (fotos/PDFs falsos, .apk, .enc)
-      [4] Apps pedindo permissoes indevidas (Acessibilidade, Overlay, SMS)
-      [5] Camadas extras: Certificados raiz MITM, VPN/DNS, portas ADB e
-          Play Protect / Modo de Isolamento (Lockdown Mode).
-
-CORRECAO DA VERSAO v21:
-- Opcao 17 (Backup de Dados dos Navegadores): corrigido o envio da URL
-  na barra de enderecos (usando Ctrl+V a partir da Area de Transferencia
-  em vez de digitacao via SendKeys, que perdia os ':' em layouts ABNT2).
-  Agora cola 'edge://settings/autofill/passwords' integralmente e abre
-  a tela de senhas sem erro.
-
-CORRECAO DA VERSAO v20:
-- Opcao 17 (Backup de Dados dos Navegadores) agora dispara '--new-tab'
-  no Edge e, caso ele abra uma 'Nova guia' por ja estar em execucao,
-  foca a janela do navegador, envia Ctrl+L, digita a URL
-  'edge://settings/autofill/passwords' e pressiona ENTER
-  automaticamente (mantendo tambem a URL na Area de Transferencia).
-
-NOVIDADES DA VERSAO v19:
-- Opcao 17 (Backup de Dados dos Navegadores) agora dispara o protocolo
-  edge://settings/autofill/passwords, foca a janela ativa do navegador
-  e copia automaticamente a URL de senhas para a Area de Transferencia
-  caso o Edge ja esteja aberto e abra uma 'Nova guia'.
-
-CORRECAO DA VERSAO v18:
-- Restauradas as funcoes 'Convert-ChromeTimeToUnix' e
-  'Export-ChromiumBookmarksHtml' em todos os scripts PowerShell (.ps1),
-  corrigindo o CommandNotFoundException ao gerar os favoritos em .html
-  com as datas originais preservadas.
-
-NOVIDADES DA VERSAO v17:
-- Opcao 17 (Backup de Dados dos Navegadores) agora cria 3 arquivos
-  .txt dedicados DENTRO da pasta de cada navegador detectado
-  (ex: BACKUP DADOS NAVEGADORES\EDGE\):
-    * COMO EXPORTAR E IMPORTAR FAVORITOS - <Navegador>.txt
-    * COMO EXPORTAR E IMPORTAR SENHAS - <Navegador>.txt
-    * COMO EXPORTAR E IMPORTAR PERFIL - <Navegador>.txt
-  alem do tutorial geral na raiz da pasta de backup.
-
-NOVIDADES DA VERSAO v16:
-- Corrigida a URL da aba de senhas do Microsoft Edge para
-  'edge://settings/autofill/passwords' (exibida nas Configuracoes
-  de Senhas e preenchimento automatico) e passada como argumento
-  limpo (@($PassUrl)) ao executavel localizado do navegador.
-
-NOVIDADES DA VERSAO v15:
-- Opcao 17 (Backup de Dados dos Navegadores) agora localiza o
-  executavel real de cada navegador instalado (Program Files, AppData
-  e App Paths) e abre diretamente na aba de senhas de cada navegador
-  detectado (ex: edge://wallet/passwords, chrome://password-manager/settings,
-  brave://password-manager/settings, opera://password-manager/settings,
-  vivaldi://password-manager/settings, about:logins), com tratamento
-  de erro e instrucao alternativa caso a aba nao abra sozinha.
-
-NOVIDADES DA VERSAO v14:
-- Varredura RAPIDA e COMPLETA (Opcao 14 no menu) agora permitem
-  escolher entre:
-    [A] Executar via POWERSHELL com monitor ao vivo (cronometro,
-        indicador animado e uso de RAM/CPU do MsMpEng a cada 3s,
-        mostrando que esta rodando sem parecer travado);
-    [B] Mostrar na TELA DO WINDOWS DEFENDER (abre Seguranca do
-        Windows para acompanhar na interface grafica);
-    [C] Ambos (monitor ao vivo no PowerShell + tela do Defender).
-- O painel principal permanece sempre aberto.
-
-NOVIDADES DA VERSAO v13:
-- Opcao 17 (Backup de Dados dos Navegadores) agora gera o arquivo
-  'TUTORIAL PARA RESTAURAR FAVORITOS, SENHAS E PERFIS.txt' de forma
-  100% DINAMICA com base apenas nos navegadores realmente detectados
-  na maquina (Chrome, Edge, Brave, Opera, Opera GX, Vivaldi e Firefox),
-  listando os perfis encontrados, os passos de Favoritos, o endereco
-  exato de importacao de Senhas (.csv) e o caminho Win+R do Perfil de
-  cada navegador instalado.
-
-NOVIDADES DA VERSAO v12:
-- NOVA OPCAO 17 (Backup de Dados dos Navegadores):
-  * Detecta automaticamente Chrome, Edge, Brave, Opera, Opera GX,
-    Vivaldi e Firefox, incluindo multiplos perfis por navegador.
-  * Cria a pasta 'BACKUP DADOS NAVEGADORES' na Area de Trabalho com
-    subpastas por navegador (CHROME, EDGE, BRAVE, OPERA, FIREFOX...).
-  * Exporta os Favoritos em .html PRESERVANDO AS DATAS ORIGINAIS com
-    o nome: 'Favoritos <Usuario> - <Navegador> - <Data>.html'.
-  * Copia cada perfil completo (pulando caches pesados) como:
-    '<Usuario> Perfil - <Navegador>'.
-  * Senhas salvas: NAO fecha o script; abre a pasta do navegador e a
-    tela de exportacao de senhas, avisando para digitar o PIN/Senha do
-    Windows se solicitado e salvar '<Usuario> senhas - <Navegador>.csv'.
-  * Gera automaticamente o 'TUTORIAL PARA RESTAURAR FAVORITOS, SENHAS
-    E PERFIS.txt' dentro da pasta com aviso para salvar antes de formatar.
-
-NOVIDADES DA VERSAO v11:
-- Ao gerar o Backup da Lista de Programas (Opcao 13), o script agora
-  tambem cria automaticamente dentro de Desktop\BACKUPS-PROGRAMAS o
-  arquivo "TUTORIAL PARA REINSTALAR TODOS OS PROGRAMAS.txt", com o
-  passo a passo para restaurar tudo apos formatar e o aviso para
-  salvar a pasta antes da formatacao.
-
-NOVIDADES DA VERSAO v10:
-- Backup da Lista de Programas (Opcao 13 no menu v9/v10): agora cria
-  automaticamente a pasta "BACKUPS-PROGRAMAS" na Area de Trabalho e
-  salva o arquivo "meus_programas.json" dentro dela.
-
-CORRECOES DA VERSAO v9:
-- Menu 100% reordenado de 1 a 16 em ordem numerica sequencial (tanto no
-  Painel CMD quanto no Painel PowerShell e nas pastas de scripts avulsos):
-    [ATUALIZACOES E IMPLANTES DE SOFTWARE]
-      01. Atualizar todos os programas (Winget)
-      02. Verificar / Atualizar Placa de Video (NVIDIA / AMD)
-      03. Gerenciador de Dispositivos: Verificar, Corrigir e Atualizar Drivers
-    [LIMPEZA DE ICE E INTEGRIDADE NEURAL]
-      04. Limpar Arquivos Temporarios (Temp)
-      05. Reparar Windows (DISM + SFC - Anti-Ciberpsicose)
-      06. Limpar Cache do Windows Update
-      07. Limpar Cache de Shaders (DirectX / NVIDIA / AMD)
-    [DESEMPENHO E CROMO (HARDWARE)]
-      08. Otimizacao Inteligente de Discos (SSD=TRIM / HD=Defrag)
-      09. Ativar Modo Sandevistan (Energia: Desempenho Maximo)
-      10. Diagnostico de Cromo: Saude de Discos (SMART) e Bateria
-    [NETRUNNING, SEGURANCA E PRIVACIDADE]
-      11. Reset Completo de Rede e DNS (Fugir da NetWatch)
-      12. Criar Ponto de Restauracao (Backup de Engrama / Mikoshi)
-      13. Backup da Lista de Programas (Winget Export / Datashard)
-      14. Barreira Blackwall: Malware, Backdoors, ngrok, Usuarios e Scans
-      15. Modo Fantasma: Auditoria Interativa de Telemetria (Desativar/Reativar)
-      16. Overclock Neural: Auditoria Interativa de Otimizacao (Ativar/Reverter)
-    [PROTOCOLOS ESPECIAIS]
-      99. Rotina Rapida (Opcoes 1 + 4 + 8) | 88. Trocar Corporacao | 0. Sair
-- Corrigido o caractere "^&" que aparecia literalmente nas frases das
-  corporacoes (ex: "Saburo e Capri").
+CONTATO & SUPORTE:
+  Criador: Adonis Peixoto (Dante3147)
+  Discord: dante_3147
+  Email  : suporte@dante3147.anonaddy.me
+  GitHub : https://github.com/Dante3147/CYBER-DECK
+========================================================================
