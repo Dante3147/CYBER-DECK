@@ -2354,289 +2354,296 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   :root {
     --corpo-name: 'ARASAKA CORP';
-    --corpo-pri: #ff003c;
-    --corpo-sec: #ffffff;
-    --corpo-bg: #050508;
-    --corpo-panel: #0d0d14;
-    --corpo-border: #ff003c;
-    --corpo-glow: rgba(255, 0, 60, 0.45);
-    --corpo-badge: #260009;
+    --corpo-pri: #b81428;
+    --corpo-pri-light: #d6243c;
+    --corpo-sec: #dcdcdc;
+    --corpo-bg: #060608;
+    --corpo-panel: #0d0d12;
+    --corpo-border: #73101d;
+    --corpo-border-subtle: rgba(184, 20, 40, 0.35);
+    --corpo-glow: rgba(184, 20, 40, 0.18);
+    --corpo-badge: #1a080c;
   }
 
   body.theme-arasaka {
     --corpo-name: 'ARASAKA CORP';
-    --corpo-pri: #ff003c;
-    --corpo-sec: #ffffff;
-    --corpo-bg: #050508;
-    --corpo-panel: #0d0d14;
-    --corpo-border: #ff003c;
-    --corpo-glow: rgba(255, 0, 60, 0.45);
-    --corpo-badge: #260009;
+    --corpo-pri: #b81428;
+    --corpo-pri-light: #d6243c;
+    --corpo-sec: #dcdcdc;
+    --corpo-bg: #060608;
+    --corpo-panel: #0d0d12;
+    --corpo-border: #73101d;
+    --corpo-border-subtle: rgba(184, 20, 40, 0.35);
+    --corpo-glow: rgba(184, 20, 40, 0.18);
+    --corpo-badge: #1a080c;
   }
 
   body.theme-trauma {
     --corpo-name: 'TRAUMA TEAM INTL';
-    --corpo-pri: #00ff88;
+    --corpo-pri: #00bf66;
+    --corpo-pri-light: #00ff88;
     --corpo-sec: #ffffff;
-    --corpo-bg: #020f08;
-    --corpo-panel: #061f12;
-    --corpo-border: #00ff88;
-    --corpo-glow: rgba(0, 255, 136, 0.45);
-    --corpo-badge: #032b17;
+    --corpo-bg: #020b06;
+    --corpo-panel: #06160e;
+    --corpo-border: #055e34;
+    --corpo-border-subtle: rgba(0, 191, 102, 0.35);
+    --corpo-glow: rgba(0, 191, 102, 0.18);
+    --corpo-badge: #032012;
   }
 
   body.theme-militech {
     --corpo-name: 'MILITECH ARMAMENTS';
-    --corpo-pri: #fcee0a;
+    --corpo-pri: #d4c208;
+    --corpo-pri-light: #fcee0a;
     --corpo-sec: #dcdcdc;
-    --corpo-bg: #0a0a06;
-    --corpo-panel: #17160d;
-    --corpo-border: #fcee0a;
-    --corpo-glow: rgba(252, 238, 10, 0.45);
-    --corpo-badge: #2b2904;
+    --corpo-bg: #080805;
+    --corpo-panel: #14130b;
+    --corpo-border: #696005;
+    --corpo-border-subtle: rgba(212, 194, 8, 0.35);
+    --corpo-glow: rgba(212, 194, 8, 0.18);
+    --corpo-badge: #201e05;
   }
 
   body.theme-kangtao {
     --corpo-name: 'KANG TAO SMART-TECH';
-    --corpo-pri: #00f0ff;
+    --corpo-pri: #00b4cc;
+    --corpo-pri-light: #00f0ff;
     --corpo-sec: #00ffaa;
-    --corpo-bg: #020d12;
-    --corpo-panel: #051a24;
-    --corpo-border: #00f0ff;
-    --corpo-glow: rgba(0, 240, 255, 0.45);
-    --corpo-badge: #022a3b;
+    --corpo-bg: #020a0e;
+    --corpo-panel: #04141c;
+    --corpo-border: #035361;
+    --corpo-border-subtle: rgba(0, 180, 204, 0.35);
+    --corpo-glow: rgba(0, 180, 204, 0.18);
+    --corpo-badge: #021f2b;
   }
 
   body.theme-netwatch {
     --corpo-name: 'NETWATCH BLACKWALL';
-    --corpo-pri: #ff007f;
+    --corpo-pri: #c90064;
+    --corpo-pri-light: #ff007f;
     --corpo-sec: #b537ff;
-    --corpo-bg: #0a000e;
-    --corpo-panel: #180022;
-    --corpo-border: #ff007f;
-    --corpo-glow: rgba(255, 0, 127, 0.45);
-    --corpo-badge: #2d003d;
+    --corpo-bg: #08000b;
+    --corpo-panel: #13001b;
+    --corpo-border: #660033;
+    --corpo-border-subtle: rgba(201, 0, 100, 0.35);
+    --corpo-glow: rgba(201, 0, 100, 0.18);
+    --corpo-badge: #22002d;
   }
 
   body.theme-afterlife {
     --corpo-name: 'AFTERLIFE EDGERUNNERS';
-    --corpo-pri: #ffe600;
+    --corpo-pri: #ccb800;
+    --corpo-pri-light: #ffe600;
     --corpo-sec: #00ffcc;
-    --corpo-bg: #0b0c10;
-    --corpo-panel: #141722;
-    --corpo-border: #ffe600;
-    --corpo-glow: rgba(255, 230, 0, 0.45);
-    --corpo-badge: #292404;
+    --corpo-bg: #08090c;
+    --corpo-panel: #10121a;
+    --corpo-border: #635a02;
+    --corpo-border-subtle: rgba(204, 184, 0, 0.35);
+    --corpo-glow: rgba(204, 184, 0, 0.18);
+    --corpo-badge: #211d04;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background-color: var(--corpo-bg);
-    color: #e0e6ed;
+    color: #cfd6df;
     font-family: 'Share Tech Mono', 'Consolas', monospace;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
     background-image: 
-      radial-gradient(ellipse at top, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
-      linear-gradient(rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.65) 100%),
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.3) 2px, rgba(0, 0, 0, 0.3) 4px);
+      radial-gradient(ellipse at center, rgba(184, 20, 40, 0.04) 0%, transparent 70%),
+      linear-gradient(rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.75) 100%);
   }
 
   .scanlines {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-    background-size: 100% 3px, 6px 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+    background-size: 100% 3px;
     z-index: 1;
+    opacity: 0.6;
   }
 
   .hud-frame {
     background: var(--corpo-panel);
-    border: 2px solid var(--corpo-border);
-    box-shadow: 0 0 30px var(--corpo-glow), inset 0 0 40px rgba(0, 0, 0, 0.85);
-    max-width: 640px;
+    border: 1px solid var(--corpo-border);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7), 0 0 16px var(--corpo-glow), inset 0 0 30px rgba(0, 0, 0, 0.9);
+    max-width: 600px;
     width: 100%;
     position: relative;
-    padding: 24px 28px;
+    padding: 22px 26px;
     border-radius: 4px;
     z-index: 5;
   }
 
   .hud-corner {
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     pointer-events: none;
   }
-  .hud-corner.tl { top: -3px; left: -3px; border-top: 3px solid var(--corpo-pri); border-left: 3px solid var(--corpo-pri); }
-  .hud-corner.tr { top: -3px; right: -3px; border-top: 3px solid var(--corpo-pri); border-right: 3px solid var(--corpo-pri); }
-  .hud-corner.bl { bottom: -3px; left: -3px; border-bottom: 3px solid var(--corpo-pri); border-left: 3px solid var(--corpo-pri); }
-  .hud-corner.br { bottom: -3px; right: -3px; border-bottom: 3px solid var(--corpo-pri); border-right: 3px solid var(--corpo-pri); }
+  .hud-corner.tl { top: -2px; left: -2px; border-top: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
+  .hud-corner.tr { top: -2px; right: -2px; border-top: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
+  .hud-corner.bl { bottom: -2px; left: -2px; border-bottom: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
+  .hud-corner.br { bottom: -2px; right: -2px; border-bottom: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
 
   .hud-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    padding-bottom: 10px;
-    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
     font-size: 11px;
-    letter-spacing: 1.5px;
-    color: #888;
+    letter-spacing: 1.2px;
+    color: #777;
   }
 
   .hud-brand {
-    color: var(--corpo-pri);
+    color: var(--corpo-pri-light);
     font-weight: bold;
     text-transform: uppercase;
+    font-size: 11px;
   }
 
   .hud-status {
-    color: var(--corpo-sec);
+    color: #88929b;
     display: flex;
     align-items: center;
     gap: 6px;
+    font-size: 10px;
   }
 
   .status-led {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: var(--corpo-pri);
     border-radius: 50%;
-    box-shadow: 0 0 8px var(--corpo-pri);
-    animation: blink 1.2s infinite;
+    box-shadow: 0 0 6px var(--corpo-pri);
+    animation: blink 1.6s infinite ease-in-out;
   }
 
   @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 0.25; }
   }
 
   h1 {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 26px;
+    font-size: 24px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: var(--corpo-pri);
-    text-shadow: 0 0 14px var(--corpo-glow);
-    margin-bottom: 4px;
+    letter-spacing: 2px;
+    color: var(--corpo-pri-light);
+    text-shadow: 0 0 10px var(--corpo-glow);
+    margin-bottom: 3px;
     text-align: center;
   }
 
   .subtitle {
-    font-size: 12px;
-    color: #999;
+    font-size: 11px;
+    color: #888;
     text-align: center;
-    letter-spacing: 2px;
-    margin-bottom: 16px;
+    letter-spacing: 1.8px;
+    margin-bottom: 14px;
     text-transform: uppercase;
   }
 
   .quote-bar {
-    background: rgba(0, 0, 0, 0.6);
-    border-left: 3px solid var(--corpo-pri);
-    padding: 8px 12px;
-    font-size: 12px;
-    color: #bbb;
-    margin-bottom: 18px;
+    background: rgba(0, 0, 0, 0.45);
+    border-left: 2px solid var(--corpo-pri);
+    padding: 6px 12px;
+    font-size: 11px;
+    color: #aaa;
+    margin-bottom: 16px;
     font-style: italic;
   }
 
   .qr-scanner-wrap {
     position: relative;
-    width: 280px;
-    height: 280px;
-    min-width: 280px;
-    min-height: 280px;
-    max-width: 280px;
-    max-height: 280px;
-    aspect-ratio: 1 / 1;
-    margin: 12px auto 18px auto;
+    width: 272px;
+    height: 272px;
+    margin: 10px auto 16px auto;
     background: #ffffff;
-    border: 2px solid var(--corpo-border);
-    box-shadow: 0 0 25px var(--corpo-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid var(--corpo-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px var(--corpo-glow);
+    display: block;
     padding: 16px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 3px;
     z-index: 10;
   }
 
   .qr-reticle {
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     pointer-events: none;
   }
-  .qr-reticle.tl { top: -4px; left: -4px; border-top: 3px solid var(--corpo-pri); border-left: 3px solid var(--corpo-pri); }
-  .qr-reticle.tr { top: -4px; right: -4px; border-top: 3px solid var(--corpo-pri); border-right: 3px solid var(--corpo-pri); }
-  .qr-reticle.bl { bottom: -4px; left: -4px; border-bottom: 3px solid var(--corpo-pri); border-left: 3px solid var(--corpo-pri); }
-  .qr-reticle.br { bottom: -4px; right: -4px; border-bottom: 3px solid var(--corpo-pri); border-right: 3px solid var(--corpo-pri); }
+  .qr-reticle.tl { top: -3px; left: -3px; border-top: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
+  .qr-reticle.tr { top: -3px; right: -3px; border-top: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
+  .qr-reticle.bl { bottom: -3px; left: -3px; border-bottom: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
+  .qr-reticle.br { bottom: -3px; right: -3px; border-bottom: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
 
   #qrcode {
-    width: 248px;
-    height: 248px;
-    min-width: 248px;
-    min-height: 248px;
-    max-width: 248px;
-    max-height: 248px;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 240px;
+    height: 240px;
+    display: block;
+    margin: 0 auto;
     background: #ffffff;
+    position: relative;
   }
 
-  #qrcode canvas, #qrcode img {
-    width: 248px !important;
-    height: 248px !important;
-    min-width: 248px !important;
-    min-height: 248px !important;
-    max-width: 248px !important;
-    max-height: 248px !important;
+  /* CRITICAL: Force canvas hidden so only the <img> created by QRCode is shown */
+  #qrcode canvas {
+    display: none !important;
+  }
+
+  #qrcode img {
+    width: 240px !important;
+    height: 240px !important;
+    max-width: 240px !important;
+    max-height: 240px !important;
     aspect-ratio: 1 / 1 !important;
     object-fit: contain !important;
     display: block !important;
     margin: 0 auto !important;
-    image-rendering: pixelated !important;
-    image-rendering: crisp-edges !important;
+    image-rendering: pixelated;
   }
 
   .telemetry-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 10px;
+    margin-bottom: 14px;
   }
 
   .telemetry-card {
     background: var(--corpo-badge);
     border: 1px solid var(--corpo-border);
-    padding: 10px 14px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border-radius: 3px;
   }
 
   .telemetry-label {
-    font-size: 10px;
+    font-size: 9px;
     letter-spacing: 1px;
-    color: #888;
+    color: #777;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
   .telemetry-val {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
-    color: var(--corpo-sec);
-    letter-spacing: 1.5px;
+    color: #e5e5e5;
+    letter-spacing: 1.2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2645,10 +2652,10 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   .copy-btn {
     background: transparent;
     border: 1px solid var(--corpo-border);
-    color: var(--corpo-pri);
+    color: var(--corpo-pri-light);
     font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    padding: 3px 8px;
+    font-size: 9px;
+    padding: 2px 7px;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.2s;
@@ -2656,38 +2663,38 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   .copy-btn:hover {
     background: var(--corpo-pri);
-    color: #000;
+    color: #fff;
   }
 
   .directive-box {
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 4px solid var(--corpo-pri);
-    padding: 14px 18px;
-    font-size: 12px;
-    line-height: 1.7;
-    color: #ccc;
-    margin-bottom: 14px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 3px solid var(--corpo-pri);
+    padding: 12px 15px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #aaa;
+    margin-bottom: 12px;
     border-radius: 2px;
   }
 
   .directive-header {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
-    color: var(--corpo-pri);
-    letter-spacing: 1.5px;
+    color: var(--corpo-pri-light);
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .step-num {
-    color: var(--corpo-pri);
+    color: var(--corpo-pri-light);
     font-weight: bold;
   }
 
   .highlight {
-    color: var(--corpo-sec);
+    color: #e0e0e0;
     font-weight: bold;
   }
 
@@ -2695,11 +2702,11 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 10px;
-    font-size: 10px;
-    color: #666;
-    letter-spacing: 1px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 8px;
+    font-size: 9px;
+    color: #555;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
   }
 </style>
@@ -2774,8 +2781,8 @@ var qrText = "$qrPayload";
 if (typeof QRCode !== 'undefined') {
   new QRCode(document.getElementById('qrcode'), {
     text: qrText,
-    width: 248,
-    height: 248,
+    width: 240,
+    height: 240,
     colorDark : '#000000',
     colorLight : '#ffffff',
     correctLevel : QRCode.CorrectLevel.M
@@ -2788,7 +2795,7 @@ function copyCode() {
     var btn = document.getElementById('copyBtn');
     btn.innerText = 'COPIADO!';
     btn.style.background = 'var(--corpo-pri)';
-    btn.style.color = '#000';
+    btn.style.color = '#fff';
     setTimeout(function() {
       btn.innerText = 'COPIAR';
       btn.style.background = 'transparent';
@@ -2815,6 +2822,7 @@ function copyCode() {
 </script>
 </body>
 </html>
+
 "@
 
     Set-Content -Path $htmlPath -Value $htmlContent -Encoding UTF8
@@ -2863,6 +2871,7 @@ function copyCode() {
         }
     }
 }
+
 function Show-MobileDebugGuide {
     param([string]$AdbPath = "")
     while ($true) {
