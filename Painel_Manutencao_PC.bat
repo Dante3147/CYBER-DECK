@@ -164,11 +164,10 @@ echo %COR_SEC%  [NETRUNNING, SEGURANCA E PRIVACIDADE]%RST%
 echo   %COR_PRI%11.%RST% Reset Completo de Rede e DNS (Fugir da NetWatch)
 echo   %COR_PRI%12.%RST% Criar Ponto de Restauracao (Backup de Engrama / Mikoshi)
 echo   %COR_PRI%13.%RST% Backup da Lista de Programas (Winget Export / Datashard)
-echo   %CYN%17.%RST% Backup de Navegadores (Favoritos, Senhas e Perfis)
-echo   %YLW%22.%RST% Recuperacao e Backup de Dados: PhotoRec + TestDisk (Fotos, Arquivos e Particoes)
 echo   %MAG%14.%RST% Barreira Blackwall: Malware, Backdoors, ngrok, Usuarios e Scans
 echo   %MAG%15.%RST% Modo Fantasma: Auditoria Interativa de Telemetria (Desativar/Reativar)
 echo   %MAG%16.%RST% Overclock Neural: Otimizacao + Limpeza Regedit/%%APPDATA%% (Apps Removidos)
+echo   %CYN%17.%RST% Backup de Navegadores (Favoritos, Senhas e Perfis)
 echo.
 echo %COR_SEC%  [SEGURANCA DE CELULARES ANDROID E IPHONE]%RST%
 echo   %CYN%18.%RST% Auditoria Mobile: Apps Nocivos, Malware/Botnets, Arquivos e Permissoes
@@ -181,6 +180,9 @@ echo   %CYN%20.%RST% Auditoria de Vazamentos: Senhas (k-Anonymity), E-mails e Bl
 echo.
 echo %COR_SEC%  [ATUALIZACOES DO CYBERDECK]%RST%
 echo   %GRN%21.%RST% Central de Atualizacoes (Baixar Update / Ver O Que Mudou)
+echo.
+echo %COR_SEC%  [RECUPERACAO E BACKUP DE DADOS (DADOS / PEN DRIVE)]%RST%
+echo   %YLW%22.%RST% Recuperacao de Arquivos e Particoes: PhotoRec + TestDisk Portateis
 echo.
 echo %COR_SEC%  [PROTOCOLOS ESPECIAIS]%RST%
 echo   %YLW%99.%RST% Executar Manutencao Basica (Opcoes 1 + 4 + 8)

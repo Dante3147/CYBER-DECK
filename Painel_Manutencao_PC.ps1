@@ -5016,11 +5016,10 @@ while ($true) {
     Write-Host "   11. Reset Completo de Rede e DNS (Fugir da NetWatch)"
     Write-Host "   12. Criar Ponto de Restauracao (Mikoshi)"
     Write-Host "   13. Backup da Lista de Programas (Winget Export)"
-    Write-Host "   17. Backup de Navegadores (Favoritos, Senhas e Perfis)" -ForegroundColor Cyan
-    Write-Host "   22. Recuperacao e Backup de Dados: PhotoRec + TestDisk (Fotos, Arquivos e Particoes)" -ForegroundColor Yellow
     Write-Host "   14. Barreira Blackwall: Malware, Backdoors, ngrok, Usuarios e Scans" -ForegroundColor Magenta
     Write-Host "   15. Modo Fantasma: Auditoria Interativa de Telemetria (Desativar/Reativar)" -ForegroundColor Magenta
     Write-Host "   16. Overclock Neural: Otimizacao + Limpeza Regedit/%APPDATA% (Apps Removidos)" -ForegroundColor Magenta
+    Write-Host "   17. Backup de Navegadores (Favoritos, Senhas e Perfis)" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "  [SEGURANCA DE CELULARES ANDROID E IPHONE]" -ForegroundColor $tema.Sec
     Write-Host "   18. Auditoria Mobile: Apps Nocivos, Malware/Botnets, Arquivos e Permissoes" -ForegroundColor Cyan
@@ -5031,11 +5030,14 @@ while ($true) {
     Write-Host "  [SEGURANCA ONLINE E VAZAMENTO DE DADOS]" -ForegroundColor $tema.Sec
     Write-Host "   20. Auditoria de Vazamentos: Senhas (k-Anonymity), E-mails e Blindagem" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "  [PROTOCOLOS ESPECIAIS]" -ForegroundColor $tema.Sec
-    Write-Host "   99. Rotina Rapida (1 + 4 + 8)  |  88. Trocar Corporacao  |  0. Sair" -ForegroundColor Yellow
-    Write-Host ""
     Write-Host "  [ATUALIZACOES DO CYBERDECK]" -ForegroundColor $tema.Sec
     Write-Host "   21. Central de Atualizacoes (Baixar Update / Ver O Que Mudou)" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  [RECUPERACAO E BACKUP DE DADOS (DADOS / PEN DRIVE)]" -ForegroundColor $tema.Sec
+    Write-Host "   22. Recuperacao de Arquivos e Particoes: PhotoRec + TestDisk Portateis" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  [PROTOCOLOS ESPECIAIS]" -ForegroundColor $tema.Sec
+    Write-Host "   99. Rotina Rapida (1 + 4 + 8)  |  88. Trocar Corporacao  |  0. Sair" -ForegroundColor Yellow
     Write-Host "========================================================================" -ForegroundColor $tema.Pri
     Show-CyberDeckNotice -BordaColor $tema.Pri
     $op = Read-Host "Escolha uma opcao e pressione ENTER"
