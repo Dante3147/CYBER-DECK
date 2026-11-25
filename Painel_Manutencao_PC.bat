@@ -99,6 +99,8 @@ set "COR_PRI=%RED%"
 set "COR_SEC=%WHT%"
 set "CORPO_NOME=ARASAKA CORPORATION // PROJETO CAPRICORN"
 set "CORPO_FRASE=Saburo e Capri: A ordem nasce do controle. Engrama em monitoramento."
+set "CORPO_KEY=arasaka"
+(echo arasaka)>"%TEMP%\cyberdeck_active_theme.txt"
 goto MENU
 
 :CORPO_2
@@ -106,6 +108,8 @@ set "COR_PRI=%YLW%"
 set "COR_SEC=%GRY%"
 set "CORPO_NOME=MILITECH INTERNATIONAL ARMAMENTS // NUSA"
 set "CORPO_FRASE=Solomon Reed: Eficiencia balistica aplicada ao hardware. Sem falhas."
+set "CORPO_KEY=militech"
+(echo militech)>"%TEMP%\cyberdeck_active_theme.txt"
 goto MENU
 
 :CORPO_3
@@ -113,6 +117,8 @@ set "COR_PRI=%CYN%"
 set "COR_SEC=%BLU%"
 set "CORPO_NOME=KANG TAO // DIVISAO SMART-TECH"
 set "CORPO_FRASE=Takemura: Precisao cirurgica. Nem mesmo um netrunner escapa."
+set "CORPO_KEY=kangtao"
+(echo kangtao)>"%TEMP%\cyberdeck_active_theme.txt"
 goto MENU
 
 :CORPO_4
@@ -120,6 +126,8 @@ set "COR_PRI=%MAG%"
 set "COR_SEC=%CYN%"
 set "CORPO_NOME=NETWATCH // BARREIRA BLACKWALL"
 set "CORPO_FRASE=Alt Cunningham: Mantenha as IAs hostis fora da rede. Sistema protegido."
+set "CORPO_KEY=netwatch"
+(echo netwatch)>"%TEMP%\cyberdeck_active_theme.txt"
 goto MENU
 
 :CORPO_5
@@ -127,6 +135,8 @@ set "COR_PRI=%YLW%"
 set "COR_SEC=%CYN%"
 set "CORPO_NOME=AFTERLIFE // EDGERUNNERS OS (2076-2078)"
 set "CORPO_FRASE=Rogue e David: Sem finais felizes em Night City... mas o PC vai voar."
+set "CORPO_KEY=afterlife"
+(echo afterlife)>"%TEMP%\cyberdeck_active_theme.txt"
 goto MENU
 
 :CORPO_6
@@ -134,6 +144,8 @@ set "COR_PRI=%GRN%"
 set "COR_SEC=%WHT%"
 set "CORPO_NOME=TRAUMA TEAM INTERNATIONAL // PLANO PLATINA"
 set "CORPO_FRASE=Gloria e Vik: Sinais vitais do hardware estaveis. Extracao em 3 min."
+set "CORPO_KEY=trauma"
+(echo trauma)>"%TEMP%\cyberdeck_active_theme.txt"
 goto MENU
 
 :MENU
