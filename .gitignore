@@ -35,21 +35,20 @@ meus_programas.json
 
 # ------------------------------------------------------------
 # FERRAMENTAS PORTÁTEIS BAIXADAS AUTOMATICAMENTE
-# (binários não devem ficar no repositório)
+# (binários e pastas de ferramentas não devem subir ao repositório)
 # ------------------------------------------------------------
 
-# ADB Android (platform-tools do Google)
-ADB ANDROID/*.exe
-ADB ANDROID/*.dll
-ADB ANDROID/*.so
-ADB ANDROID/platform-tools/
-ADB ANDROID/adb.exe
-ADB ANDROID/fastboot.exe
+# ADB Android completo
+ADB ANDROID/
+[Aa][Dd][Bb]*[Aa][Nn][Dd][Rr][Oo][Ii][Dd]/
 
-# libimobiledevice iPhone
-LIBIMOBILEDEVICE IPHONE/*.exe
-LIBIMOBILEDEVICE IPHONE/*.dll
-LIBIMOBILEDEVICE IPHONE/*.lib
+# libimobiledevice iPhone completo
+LIBIMOBILEDEVICE IPHONE/
+[Ll][Ii][Bb][Ii][Mm][Oo][Bb][Ii][Ll][Ee][Dd][Ee][Vv][Ii][Cc][Ee]*[Ii][Pp][Hh][Oo][Nn][Ee]/
+
+# Programas de Backup portáteis (PhotoRec, TestDisk, etc.)
+PROGRAMAS BACKUP/
+[Pp][Rr][Oo][Gg][Rr][Aa][Mm][Aa][Ss]*[Bb][Aa][Cc][Kk][Uu][Pp]/
 
 # VeraCrypt portátil
 VERACRYPT PORTATIL/*.exe

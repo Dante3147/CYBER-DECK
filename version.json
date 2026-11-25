@@ -1,14 +1,15 @@
 {
   "version": "39.0",
-  "release_date": "2026-11-24",
+  "release_date": "2026-11-25",
   "changelog": [
     {
       "version": "39.0",
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "changes": [
-        "Guia Interativo de Depuracao USB e Modo Desenvolvedor por marca e modelo (Samsung, Xiaomi/HyperOS/MIUI, Motorola, iPhone/iOS, Realme/OPPO/OnePlus, Pixel, Asus, LG e generico)",
-        "Pareamento ADB sem fio via QR Code (Android 11+) 100% offline com codigo PIN dinamico e interface Cyberpunk",
-        "Inclusao da biblioteca offline qrcode.min.js na pasta ADB ANDROID para pareamento sem conexao externa"
+        "Redesign completo da tela de Pareamento ADB QR Code: proporcao 1:1 quadrada (sem esticar), moldura tatica Cyberpunk 2077 com cantos chanfrados, reticulos e temas das corporacoes (Arasaka, Trauma Team, Militech, Kang Tao, Netwatch, Afterlife)",
+        "NOVA OPCAO 22: Central de Recuperacao de Dados portatil com PhotoRec e TestDisk em PROGRAMAS BACKUP, integrando destino automatico em Desktop\\DADOS e no Pen Drive",
+        "Download e extracao automatica do TestDisk e PhotoRec portateis com barra de progresso oficial da CGSecurity",
+        "Atualizacao do .gitignore para isolar completamente as pastas ADB ANDROID, LIBIMOBILEDEVICE IPHONE e PROGRAMAS BACKUP do repositorio"
       ]
     },
     {

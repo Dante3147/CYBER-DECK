@@ -165,6 +165,7 @@ echo   %COR_PRI%11.%RST% Reset Completo de Rede e DNS (Fugir da NetWatch)
 echo   %COR_PRI%12.%RST% Criar Ponto de Restauracao (Backup de Engrama / Mikoshi)
 echo   %COR_PRI%13.%RST% Backup da Lista de Programas (Winget Export / Datashard)
 echo   %CYN%17.%RST% Backup de Navegadores (Favoritos, Senhas e Perfis)
+echo   %YLW%22.%RST% Recuperacao e Backup de Dados: PhotoRec + TestDisk (Fotos, Arquivos e Particoes)
 echo   %MAG%14.%RST% Barreira Blackwall: Malware, Backdoors, ngrok, Usuarios e Scans
 echo   %MAG%15.%RST% Modo Fantasma: Auditoria Interativa de Telemetria (Desativar/Reativar)
 echo   %MAG%16.%RST% Overclock Neural: Otimizacao + Limpeza Regedit/%%APPDATA%% (Apps Removidos)
@@ -218,6 +219,7 @@ if "%opcao%"=="18" goto OP18
 if "%opcao%"=="19" goto OP19
 if "%opcao%"=="20" goto OP20
 if "%opcao%"=="21" goto OP21
+if "%opcao%"=="22" goto OP22
 if /i "%opcao%"=="upd" goto OP21
 if /i "%opcao%"=="log" goto OP21_LOG
 if "%opcao%"=="99" goto OP99
@@ -1580,6 +1582,21 @@ pause
 goto MENU
 :OP20_RUN_PS
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts_individuais_powershell\20_vazamento_dados_online.ps1"
+goto MENU
+
+
+:OP22
+cls
+echo %MAG%========================================================================%RST%
+echo %CYN%  [22] CENTRAL DE BACKUP E RECUPERACAO DE DADOS // PHOTOREC + TESTDISK%RST%
+echo %MAG%========================================================================%RST%
+if exist "%~dp0scripts_individuais_powershell\22_recuperacao_dados_photorec_testdisk.ps1" goto OP22_RUN_PS
+echo %RED%  [ERRO] Arquivo auxiliar scripts_individuais_powershell\22_recuperacao_dados_photorec_testdisk.ps1 nao encontrado.%RST%
+pause
+goto MENU
+
+:OP22_RUN_PS
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts_individuais_powershell\22_recuperacao_dados_photorec_testdisk.ps1"
 goto MENU
 
 :OP21
