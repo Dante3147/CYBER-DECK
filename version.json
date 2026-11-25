@@ -8,8 +8,7 @@
       "changes": [
         "Redesign completo da tela de Pareamento ADB QR Code: proporcao 1:1 quadrada (sem esticar), moldura tatica Cyberpunk 2077 com cantos chanfrados, reticulos e temas das corporacoes (Arasaka, Trauma Team, Militech, Kang Tao, Netwatch, Afterlife)",
         "NOVA OPCAO 22: Central de Recuperacao de Dados portatil com PhotoRec e TestDisk em PROGRAMAS BACKUP, integrando destino automatico em Desktop\\DADOS e no Pen Drive",
-        "Download e extracao automatica do TestDisk e PhotoRec portateis com barra de progresso oficial da CGSecurity",
-        "Atualizacao do .gitignore para isolar completamente as pastas ADB ANDROID, LIBIMOBILEDEVICE IPHONE e PROGRAMAS BACKUP do repositorio"
+        "Download e extracao automatica do TestDisk e PhotoRec portateis com barra de progresso oficial da CGSecurity"
       ]
     },
     {
