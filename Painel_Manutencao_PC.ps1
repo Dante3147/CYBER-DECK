@@ -2624,6 +2624,11 @@ function Show-AdbQrCodePairing {
     Write-Host '  [SONGBIRD // CP2077]: "Certifique-se de que o computador e o celular estao na MESMA rede Wi-Fi."' -ForegroundColor Magenta
     Write-Host ""
 
+    if ($AdbPath -and (Test-Path $AdbPath)) {
+        & $AdbPath start-server 2>&1 | Out-Null
+        & $AdbPath mdns check 2>&1 | Out-Null
+    }
+
     $pairCode = (Get-Random -Minimum 100000 -Maximum 999999).ToString()
     $hostName = $env:COMPUTERNAME
     if ($hostName.Length -gt 12) { $hostName = $hostName.Substring(0, 12) }
@@ -2902,33 +2907,33 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
   .qr-scanner-wrap {
     position: relative;
-    width: 272px;
-    height: 272px;
+    width: 312px;
+    height: 312px;
     margin: 10px auto 16px auto;
     background: #ffffff;
     border: 1px solid var(--corpo-border);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px var(--corpo-glow);
     display: block;
-    padding: 16px;
+    padding: 26px;
     box-sizing: border-box;
-    border-radius: 3px;
+    border-radius: 4px;
     z-index: 10;
   }
 
   .qr-reticle {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     pointer-events: none;
   }
-  .qr-reticle.tl { top: -3px; left: -3px; border-top: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
-  .qr-reticle.tr { top: -3px; right: -3px; border-top: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
-  .qr-reticle.bl { bottom: -3px; left: -3px; border-bottom: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
-  .qr-reticle.br { bottom: -3px; right: -3px; border-bottom: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
+  .qr-reticle.tl { top: -8px; left: -8px; border-top: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
+  .qr-reticle.tr { top: -8px; right: -8px; border-top: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
+  .qr-reticle.bl { bottom: -8px; left: -8px; border-bottom: 2px solid var(--corpo-pri); border-left: 2px solid var(--corpo-pri); }
+  .qr-reticle.br { bottom: -8px; right: -8px; border-bottom: 2px solid var(--corpo-pri); border-right: 2px solid var(--corpo-pri); }
 
   #qrcode {
-    width: 240px;
-    height: 240px;
+    width: 260px;
+    height: 260px;
     display: block;
     margin: 0 auto;
     background: #ffffff;
@@ -2941,10 +2946,10 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
   }
 
   #qrcode img {
-    width: 240px !important;
-    height: 240px !important;
-    max-width: 240px !important;
-    max-height: 240px !important;
+    width: 260px !important;
+    height: 260px !important;
+    max-width: 260px !important;
+    max-height: 260px !important;
     aspect-ratio: 1 / 1 !important;
     object-fit: contain !important;
     display: block !important;
@@ -3116,11 +3121,11 @@ var qrText = "$qrPayload";
 if (typeof QRCode !== 'undefined') {
   new QRCode(document.getElementById('qrcode'), {
     text: qrText,
-    width: 240,
-    height: 240,
+    width: 260,
+    height: 260,
     colorDark : '#000000',
     colorLight : '#ffffff',
-    correctLevel : QRCode.CorrectLevel.M
+    correctLevel : QRCode.CorrectLevel.L
   });
 }
 
@@ -3180,11 +3185,39 @@ function copyCode() {
     Write-Host ""
     Write-Host '  [VIKTOR VEKTOR // CP2077]: "Se o seu aparelho pedir IP e Porta manual, use o Pareamento por Codigo."' -ForegroundColor Yellow
 
+    Write-Host "  DICA PARA LEITURA INSTANTANEA DA CAMERA:" -ForegroundColor Cyan
+    Write-Host "    -> Mantenha o celular a 30-40 cm do monitor (nao cole a lente na tela para evitar reflexo)." -ForegroundColor White
+    Write-Host ""
+    Write-Host "  OU USE O ATALHO POR CODIGO (INSTANTANEO EM 0.5s SEM CAMERA):" -ForegroundColor Green
+    Write-Host "    -> No celular: toque em 'Parear com codigo de pareamento' (mostra IP:Porta e PIN de 6 digitos)." -ForegroundColor DarkGray
+    Write-Host ""
+
     if ($AdbPath -and (Test-Path $AdbPath)) {
-        Write-Host ""
-        Write-Host "  Deseja que o CyberDeck aguarde a conexao automatica do dispositivo agora? [S/N]" -ForegroundColor Cyan
-        $aguardar = Read-Host "Opcao"
-        if ($aguardar -match "^[sSyY]") {
+        Write-Host "  [1] Parear diretamente por Codigo/IP (Instantaneo - sem camera)" -ForegroundColor Green
+        Write-Host "  [2] Aguardar conexao automatica do QR Code escaneado (15s)" -ForegroundColor Yellow
+        Write-Host "  [0] Pular e voltar ao menu" -ForegroundColor DarkGray
+        $pairChoice = Read-Host "Escolha como deseja prosseguir [0-2]"
+        if ($pairChoice -eq "1") {
+            $devIpPort = (Read-Host "`nDigite o Endereco IP e Porta do celular (ex: 192.168.1.15:37899)").Trim()
+            $devPin = (Read-Host "Digite o Codigo PIN de 6 digitos exibido no celular").Trim()
+            if ($devIpPort -and $devPin) {
+                Write-Host "  Executando: adb pair $devIpPort $devPin ..." -ForegroundColor Cyan
+                $resP = & $AdbPath pair $devIpPort $devPin 2>&1
+                $pStr = ($resP -join " ")
+                Write-Host "  Resultado: $pStr" -ForegroundColor White
+                if ($pStr -match "Successfully paired") {
+                    Write-Host "  [SUCESSO] Aparelho pareado com sucesso no ADB!" -ForegroundColor Green
+                    Write-Host "  Conectando ao dispositivo..." -ForegroundColor Cyan
+                    & $AdbPath connect $devIpPort 2>&1 | Out-Null
+                    $chk = & $AdbPath devices 2>&1
+                    if ($chk -match "\s+device$") {
+                        Write-Host "`n  [CONECTADO COM SUCESSO!] Dispositivo online e pronto para uso!" -ForegroundColor Green
+                        Write-Host '  [LUCY // Edgerunners 1]: "Link neural ativo. Aparelho pronto."' -ForegroundColor Cyan
+                    }
+                }
+            }
+        }
+        elseif ($pairChoice -eq "2") {
             Write-Host "`n  Aguardando handshake do aparelho Android (15s)..." -ForegroundColor Yellow
             $start = Get-Date
             $conectou = $false
@@ -3201,7 +3234,7 @@ function copyCode() {
                 Write-Host "." -NoNewline -ForegroundColor DarkGray
             }
             if (-not $conectou) {
-                Write-Host "`n  [AVISO] Conexao automatica expirou. Se o aparelho pareou, pode verificar no menu principal do ADB." -ForegroundColor Yellow
+                Write-Host "`n  [AVISO] Conexao automatica expirou. Se o aparelho ja pareou, pode verificar no menu principal do ADB." -ForegroundColor Yellow
             }
         }
     }
