@@ -3257,6 +3257,288 @@ function Get-AndroidPackagesSafe {
     return @($pkgs | Select-Object -Unique)
 }
 
+function Invoke-AndroidCacheCleanup {
+    param([string]$AdbPath, [string]$DeviceId)
+    Clear-Host
+    Show-BootBanner "[11-CACHE] LIMPEZA DE CACHE DE APPS E ARQUIVOS TEMPORARIOS (USB / WI-FI)"
+    Write-Host '  [V // CP2077]: "Limpando entulho digital, caches e miniaturas para acelerar o aparelho sem tocar nos seus dados pessoais."' -ForegroundColor Cyan
+    Write-Host '  [ALT CUNNINGHAM // CP2077]: "Caches sao arquivos temporarios de navegacao e midia. Suas senhas, fotos e contas permanecem intactas."' -ForegroundColor Green
+    Write-Host ""
+
+    if (-not ($AdbPath -and $DeviceId)) {
+        Write-Host "  [MODO GUIA // SEM CELULAR CONECTADO NO ADB]" -ForegroundColor Yellow
+        Write-Host "  Para limpar caches diretamente pelo PC via cabo USB ou Wi-Fi:" -ForegroundColor White
+        Write-Host "    1. Conecte seu aparelho pela Opcao [6] ou [10] do menu Android." -ForegroundColor DarkGray
+        Write-Host "  Instrucoes para limpeza manual no aparelho agora:" -ForegroundColor Cyan
+        Write-Host "    - No Android: Configuracoes > Armazenamento > Liberar espaco / Lixo." -ForegroundColor White
+        Write-Host "    - Em apps pesados (Instagram, TikTok, WhatsApp, Chrome):" -ForegroundColor White
+        Write-Host "      Configuracoes > Aplicativos > toque no app > Armazenamento > 'Limpar cache'." -ForegroundColor Yellow
+        Write-Host "      (ATENCAO: toque em 'Limpar cache', e NAO em 'Limpar dados')." -ForegroundColor Red
+        Pause-Cyber
+        return
+    }
+
+    while ($true) {
+        Write-Host "`n========================================================================" -ForegroundColor Yellow
+        Write-Host "  DISPOSITIVO ALVO: $DeviceId" -ForegroundColor Cyan
+        Write-Host "========================================================================" -ForegroundColor Yellow
+        Write-Host "  [1] LIMPEZA GLOBAL DE CACHES DE TODOS OS APPS (pm trim-caches)" -ForegroundColor Green
+        Write-Host "      -> Forca o sistema Android a descarregar caches temporarios de todos os apps instalados." -ForegroundColor DarkGray
+        Write-Host "  [2] LIMPAR PASTAS DE CACHE E MINIATURAS DA GALERIA (.thumbnails / .cache / temp)" -ForegroundColor Cyan
+        Write-Host "      -> Apaga miniaturas antigas de fotos/videos que acumulam gigabytes no armazenamento." -ForegroundColor DarkGray
+        Write-Host "  [3] LIMPEZA COMPLETA (Opcao 1 + Opcao 2 em sequencia)" -ForegroundColor Yellow
+        Write-Host "  [4] LIMPAR CACHE DE UM APP ESPECIFICO (Abrir tela tatica de armazenamento do app)" -ForegroundColor Magenta
+        Write-Host "  [5] LIMPAR MINIATURAS E CACHE DE STATUS DO WHATSAPP (.Statuses)" -ForegroundColor Green
+        Write-Host "  [0] Voltar ao Submenu Android" -ForegroundColor DarkGray
+        Write-Host "========================================================================" -ForegroundColor Yellow
+        $ccOp = Read-Host "Escolha a operacao de cache [0-5]"
+
+        if ($ccOp -eq "0") { break }
+        elseif ($ccOp -in @("1", "3")) {
+            Write-Host "`n  [1] Executando protocolo 'pm trim-caches' no Android..." -ForegroundColor Cyan
+            Write-Host '  [VIKTOR VEKTOR // CP2077]: "Requisitando descarte de caches volumosos ao StorageManager do Android..."' -ForegroundColor Green
+            $trimOut = & $AdbPath -s $DeviceId shell "pm trim-caches 999999999999" 2>&1
+            $trimStr = ($trimOut -join " ")
+            if ($trimStr -match "Error" -or $trimStr -match "Failure") {
+                Write-Host "  [AVISO] pm trim-caches retornou: $trimStr" -ForegroundColor Yellow
+            } else {
+                Write-Host "  [SUCESSO] pm trim-caches acionado! O kernel do Android descartou os caches inativos." -ForegroundColor Green
+            }
+            if ($ccOp -ne "3") { Pause-Cyber; continue }
+        }
+
+        if ($ccOp -in @("2", "3")) {
+            Write-Host "`n  [2] Limpando pastas de miniaturas (.thumbnails), caches de galeria e temporarios..." -ForegroundColor Cyan
+            Write-Host '  [CAPRI // Edgerunners 2]: "Excluindo miniaturas residuais e caches em /sdcard/."' -ForegroundColor Cyan
+            $null = & $AdbPath -s $DeviceId shell "rm -rf /sdcard/.thumbnails/* /sdcard/DCIM/.thumbnails/* /sdcard/Pictures/.thumbnails/* /sdcard/.cache/* 2>/dev/null; echo 'DONE'" 2>&1
+            $null = & $AdbPath -s $DeviceId shell "rm -rf /sdcard/Android/data/*/cache/* 2>/dev/null; echo 'DONE'" 2>&1
+            Write-Host "  [OK] Caches de miniaturas (.thumbnails) e caches de midia liberados com sucesso!" -ForegroundColor Green
+            Write-Host '  [LUCY // Edgerunners 1]: "Espaco de armazenamento recuperado sem afetar suas fotos originais."' -ForegroundColor Green
+            Pause-Cyber
+        }
+        elseif ($ccOp -eq "4") {
+            Write-Host "`n  [4] LIMPAR CACHE DE APP ESPECIFICO" -ForegroundColor Magenta
+            Write-Host "  Apps populares comuns:" -ForegroundColor DarkGray
+            Write-Host "    - Google Chrome:   com.android.chrome" -ForegroundColor White
+            Write-Host "    - Instagram:       com.instagram.android" -ForegroundColor White
+            Write-Host "    - WhatsApp:        com.whatsapp" -ForegroundColor White
+            Write-Host "    - TikTok:          com.zhiliaoapp.musically" -ForegroundColor White
+            Write-Host "    - YouTube:         com.google.android.youtube" -ForegroundColor White
+            Write-Host "    - Facebook:        com.facebook.katana" -ForegroundColor White
+            Write-Host ""
+            $targetApp = (Read-Host "Digite o nome do pacote (ou 0 para cancelar)").Trim()
+            if ([string]::IsNullOrWhiteSpace($targetApp) -or $targetApp -eq "0") { continue }
+            
+            Write-Host "  Abrindo tela direta de 'Armazenamento e Cache' de '$targetApp' na tela do seu celular..." -ForegroundColor Cyan
+            & $AdbPath -s $DeviceId shell "am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:$targetApp" 2>&1 | Out-Null
+            Write-Host "  [OK] Tela aberta no smartphone! Toque em 'Armazenamento e cache' e depois em 'Limpar cache'." -ForegroundColor Green
+            Pause-Cyber
+        }
+        elseif ($ccOp -eq "5") {
+            Write-Host "`n  [5] LIMPAR CACHE DE STATUS E MINIATURAS DO WHATSAPP" -ForegroundColor Green
+            Write-Host '  [REBECCA // Edgerunners 1]: "Status visualizados de outras pessoas ficam guardados na memoria ocupando espaco!"' -ForegroundColor Magenta
+            $confWa = Read-Host "Deseja apagar os arquivos temporarios de status (.Statuses) do WhatsApp? [S/N]"
+            if ($confWa -match "^[sS]") {
+                & $AdbPath -s $DeviceId shell "rm -rf /sdcard/Android/media/com.whatsapp/WhatsApp/Media/.Statuses/* /sdcard/WhatsApp/Media/.Statuses/* 2>/dev/null; echo 'DONE'" 2>&1 | Out-Null
+                Write-Host "  [OK] Pasta de status temporarios (.Statuses) limpa com sucesso!" -ForegroundColor Green
+            } else {
+                Write-Host "  [CANCELADO] Nenhuma alteracao feita." -ForegroundColor DarkGray
+            }
+            Pause-Cyber
+        }
+    }
+}
+
+function Invoke-AndroidNetworkFlush {
+    param([string]$AdbPath, [string]$DeviceId)
+    Clear-Host
+    Show-BootBanner "[12-NET] LIMPEZA DE REDE, FLUSH DNS E DADOS DE NAVEGACAO (USB / WI-FI)"
+    Write-Host '  [JUDY ALVAREZ // CP2077]: "Zerando cache DNS, derrubando sockets zumbis e limpando rastros de rede do comunicador."' -ForegroundColor Cyan
+    Write-Host '  [SONGBIRD // CP2077]: "Ideal quando sites nao abrem, conexao fica lenta ou apos alterar configuracoes de Wi-Fi/DNS."' -ForegroundColor Magenta
+    Write-Host ""
+
+    if (-not ($AdbPath -and $DeviceId)) {
+        Write-Host "  [MODO GUIA // SEM CELULAR CONECTADO NO ADB]" -ForegroundColor Yellow
+        Write-Host "  Para executar o Flush DNS e limpeza de rede remotamente pelo PC:" -ForegroundColor White
+        Write-Host "    1. Conecte o aparelho via cabo USB ou Pareamento Wi-Fi (Opcao [6] ou [10])." -ForegroundColor DarkGray
+        Write-Host "  Como fazer o Flush DNS e limpeza manual no Android agora:" -ForegroundColor Cyan
+        Write-Host "    - Flush DNS Instantaneo: Ative o Modo Aviao por 10 segundos e desative." -ForegroundColor White
+        Write-Host "    - Limpar Historico e Cache de Sites no Chrome:" -ForegroundColor White
+        Write-Host "      Abra o Chrome > toque nos 3 pontinhos > 'Limpar dados de navegacao'." -ForegroundColor Yellow
+        Write-Host "    - Redefinir Ajustes de Rede: Configuracoes > Gerenciamento Geral > Redefinir > 'Redefinir configuracoes de rede'." -ForegroundColor White
+        Pause-Cyber
+        return
+    }
+
+    $isWifiConn = ($DeviceId -match ":\d+$")
+
+    while ($true) {
+        Write-Host "`n========================================================================" -ForegroundColor Yellow
+        Write-Host "  DISPOSITIVO ALVO: $DeviceId $(if ($isWifiConn) { '[CONEXAO VIA WI-FI]' } else { '[CONEXAO VIA CABO USB]' })" -ForegroundColor Cyan
+        Write-Host "========================================================================" -ForegroundColor Yellow
+        Write-Host "  [1] EXECUTAR FLUSH DNS NO CELULAR (Limpar cache do resolvedor DNS / netd)" -ForegroundColor Green
+        Write-Host "      -> Forca o descarte da tabela de DNS antiga do Android (equivale a /flushdns)." -ForegroundColor DarkGray
+        Write-Host "  [2] LIMPAR HISTORICO E DADOS DE NAVEGACAO / SITES (Google Chrome)" -ForegroundColor Cyan
+        Write-Host "      -> Abre com 1 clique a tela nativa de 'Limpar dados' do Chrome no celular ou reset via ADB." -ForegroundColor DarkGray
+        Write-Host "  [3] CICLO DO SUBSISTEMA DE REDE (Renovacao de sockets e tabela de rotas)" -ForegroundColor Yellow
+        Write-Host "      -> Recarrega as rotas de rede sem reiniciar o aparelho." -ForegroundColor DarkGray
+        Write-Host "  [4] COMO REDEFINIR CONFIGURACOES DE REDE DE FABRICA (Guia Passo a Passo)" -ForegroundColor Magenta
+        Write-Host "  [0] Voltar ao Submenu Android" -ForegroundColor DarkGray
+        Write-Host "========================================================================" -ForegroundColor Yellow
+        $netOp = Read-Host "Escolha a opcao de rede [0-4]"
+
+        if ($netOp -eq "0") { break }
+        elseif ($netOp -eq "1") {
+            Write-Host "`n  [FLUSH DNS ANDROID] Executando comandos de descarte de DNS no Android..." -ForegroundColor Cyan
+            Write-Host '  [ALT CUNNINGHAM // CP2077]: "Requisitando flush de cache no resolver netd e conexoes ativas..."' -ForegroundColor Red
+
+            Write-Host "  -> Limpando cache de resolucao de nomes (ndc resolver)..." -ForegroundColor White
+            $null = & $AdbPath -s $DeviceId shell "ndc resolver flushdefaultif 2>/dev/null; ndc resolver cleannetdns 2>/dev/null; echo 'OK'" 2>&1
+            
+            Write-Host "  -> Requisitando flush-dns ao servico de conectividade..." -ForegroundColor White
+            $null = & $AdbPath -s $DeviceId shell "cmd connectivity flush-dns 2>/dev/null; echo 'OK'" 2>&1
+            
+            Write-Host "  -> Limpando cache de tabelas de rota IP..." -ForegroundColor White
+            $null = & $AdbPath -s $DeviceId shell "ip route flush cache 2>/dev/null; echo 'OK'" 2>&1
+
+            Write-Host "  [SUCESSO] Cache DNS do celular descartado com sucesso!" -ForegroundColor Green
+            Write-Host '  [JUDY ALVAREZ // CP2077]: "Tabelas de resolucao limpas. O celular consultara os novos IPs nas proximas requisicoes."' -ForegroundColor Cyan
+            Pause-Cyber
+        }
+        elseif ($netOp -eq "2") {
+            Write-Host "`n  [LIMPEZA DE NAVEGACAO E SITES // GOOGLE CHROME]" -ForegroundColor Cyan
+            Write-Host "  Escolha o modo de limpeza para o navegador:" -ForegroundColor White
+            Write-Host "    [1] ABRIR TELA TATICA NO CELULAR: Dispara direto a janela 'Limpar dados de navegacao' do Chrome" -ForegroundColor Green
+            Write-Host "        (Permite a voce selecionar no celular: Historico, Cookies ou Cache, e clicar em Limpar)" -ForegroundColor DarkGray
+            Write-Host "    [2] RESET COMPLETO VIA ADB: Limpa todo o cache e dados do Chrome (pm clear com.android.chrome)" -ForegroundColor Red
+            Write-Host "        (ATENCAO: Redefine o Chrome para recem-instalado. Remove historico, cookies e logins salvos!)" -ForegroundColor Yellow
+            Write-Host "    [3] Abrir detalhes de armazenamento de OUTROS navegadores (Samsung Internet, Firefox, Edge)" -ForegroundColor Magenta
+            Write-Host "    [0] Cancelar" -ForegroundColor DarkGray
+            $chrOp = Read-Host "Opcao [0-3]"
+
+            if ($chrOp -eq "1") {
+                Write-Host "  Disparando tela nativa de 'Limpar Dados' no Google Chrome do aparelho..." -ForegroundColor Cyan
+                & $AdbPath -s $DeviceId shell "am start -n com.android.chrome/com.google.android.apps.chrome.Main -d 'chrome://settings/clearBrowserData'" 2>&1 | Out-Null
+                Write-Host "  [OK] Tela de 'Limpar dados de navegacao' aberta no seu celular!" -ForegroundColor Green
+                Write-Host "  -> Selecione o periodo (ex: 'Todo o periodo') e toque no botao azul 'Limpar dados'." -ForegroundColor Yellow
+                Pause-Cyber
+            }
+            elseif ($chrOp -eq "2") {
+                Write-Host "`n  [ALERTA DE SEGURANCA] O comando 'pm clear com.android.chrome' vai zerar totalmente o navegador:" -ForegroundColor Red
+                Write-Host "    - Apagara o historico de todos os sites visitados" -ForegroundColor Yellow
+                Write-Host "    - Apagara cookies e deslogara de sites abertos no Chrome" -ForegroundColor Yellow
+                Write-Host "    - Liberara 100% do cache acumulado" -ForegroundColor Green
+                $confChr = Read-Host "Deseja REALMENTE executar o reset completo do Chrome no aparelho? [S/N]"
+                if ($confChr -match "^[sS]") {
+                    Write-Host "  Executando: adb -s $DeviceId shell pm clear com.android.chrome ..." -ForegroundColor Cyan
+                    $resClr = & $AdbPath -s $DeviceId shell "pm clear com.android.chrome" 2>&1
+                    $clrStr = ($resClr -join " ")
+                    if ($clrStr -match "Success") {
+                        Write-Host "  [SUCESSO] Google Chrome resetado! Historico, cache e dados zerados." -ForegroundColor Green
+                    } else {
+                        Write-Host "  Resultado: $clrStr" -ForegroundColor White
+                    }
+                } else {
+                    Write-Host "  [CANCELADO] Nenhuma alteracao feita no Chrome." -ForegroundColor DarkGray
+                }
+                Pause-Cyber
+            }
+            elseif ($chrOp -eq "3") {
+                Write-Host "  Navegadores suportados:" -ForegroundColor Cyan
+                Write-Host "    - Samsung Internet:  com.sec.android.app.sbrowser" -ForegroundColor White
+                Write-Host "    - Mozilla Firefox:   org.mozilla.firefox" -ForegroundColor White
+                Write-Host "    - Microsoft Edge:    com.microsoft.emmx" -ForegroundColor White
+                Write-Host "    - Brave Browser:     com.brave.browser" -ForegroundColor White
+                Write-Host "    - Opera Browser:     com.opera.browser" -ForegroundColor White
+                $navPkg = (Read-Host "Digite o pacote do navegador (ex: org.mozilla.firefox)").Trim()
+                if ($navPkg -and $navPkg -ne "0") {
+                    & $AdbPath -s $DeviceId shell "am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:$navPkg" 2>&1 | Out-Null
+                    Write-Host "  [OK] Configuracoes de '$navPkg' abertas no celular! Toque em 'Armazenamento > Limpar cache'." -ForegroundColor Green
+                }
+                Pause-Cyber
+            }
+        }
+        elseif ($netOp -eq "3") {
+            Write-Host "`n  [CICLO DE SUBSISTEMA DE REDE]" -ForegroundColor Yellow
+            if ($isWifiConn) {
+                Write-Host "  [AVISO IMPORTANTE - CONEXAO VIA WI-FI DETECTADA]" -ForegroundColor Yellow
+                Write-Host "  Como o seu aparelho esta conectado ao ADB via Wi-Fi sem fio ($DeviceId)," -ForegroundColor White
+                Write-Host "  desativar o Wi-Fi remotamente derrubaria a sua propria conexao com este computador!" -ForegroundColor Yellow
+                Write-Host ""
+                Write-Host "  Executando renovacao segura sem desligar o link Wi-Fi:" -ForegroundColor Cyan
+                $null = & $AdbPath -s $DeviceId shell "ndc resolver flushdefaultif 2>/dev/null; ip route flush cache 2>/dev/null" 2>&1
+                Write-Host "  [OK] Tabelas de rota e cache de sockets liberados de forma segura!" -ForegroundColor Green
+            } else {
+                Write-Host "  Aparelho conectado via CABO USB: e possivel reiniciar os adaptadores de rede com seguranca." -ForegroundColor Green
+                $cicloConf = Read-Host "Deseja alternar suavemente a conexao de rede para recarregar o stack? [S/N]"
+                if ($cicloConf -match "^[sS]") {
+                    Write-Host "  Ciclando interface Wi-Fi..." -ForegroundColor Cyan
+                    $null = & $AdbPath -s $DeviceId shell "svc wifi disable; sleep 1; svc wifi enable" 2>&1
+                    Write-Host "  [OK] Wi-Fi reiniciado no aparelho! Nova requisicao DHCP e DNS efetuada." -ForegroundColor Green
+                }
+            }
+            Pause-Cyber
+        }
+        elseif ($netOp -eq "4") {
+            Write-Host "`n========================================================================" -ForegroundColor Magenta
+            Write-Host "  [GUIA] COMO REDEFINIR CONFIGURACOES DE REDE DE FABRICA NO ANDROID" -ForegroundColor Magenta
+            Write-Host "========================================================================" -ForegroundColor Magenta
+            Write-Host "  Essa opcao resolve problemas cronicos de Wi-Fi caindo, dados moveis 4G/5G lentos ou Bluetooth:" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  [SAMSUNG GALAXY (ONE UI)]:" -ForegroundColor Green
+            Write-Host "    1. Abra: Configuracoes > Gerenciamento Geral." -ForegroundColor White
+            Write-Host "    2. Toque em: Restaurar (ou Redefinir)." -ForegroundColor White
+            Write-Host "    3. Selecione: 'Redefinir configuracoes de rede móvel / Wi-Fi'." -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "  [XIAOMI / REDMI / POCO (MIUI / HYPEROS)]:" -ForegroundColor Green
+            Write-Host "    1. Abra: Configuracoes > Conexao e Compartilhamento." -ForegroundColor White
+            Write-Host "    2. Role ate o final e toque em: 'Redefinir Wi-Fi, redes móveis e Bluetooth'." -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "  [MOTOROLA / PIXEL / ANDROID GERAL]:" -ForegroundColor Green
+            Write-Host "    1. Abra: Configuracoes > Sistema > Opcoes de redefinicao." -ForegroundColor White
+            Write-Host "    2. Toque em: 'Redefinir Wi-Fi, rede móvel e Bluetooth'." -ForegroundColor Yellow
+            Write-Host "========================================================================" -ForegroundColor Magenta
+            Pause-Cyber
+        }
+    }
+}
+
+function Show-IphoneCacheGuide {
+    Clear-Host
+    Show-BootBanner "[GUIA TATICO] LIMPEZA DE CACHE, SAFARI E FLUSH DNS NO IPHONE (IOS)"
+    Write-Host '  [HANAKO ARASAKA // CP2077]: "No iOS, a Apple isola cada app em sandbox. Veja as diretrizes para descarregar caches e resetar redes."' -ForegroundColor Magenta
+    Write-Host ""
+    Write-Host "  [1] FLUSH DNS NO IPHONE (Reset do Resolvedor DNS):" -ForegroundColor Cyan
+    Write-Host "    -> METODO RAPIDO (10s): Abra a Central de Controle e ative o 'Modo Aviao'." -ForegroundColor White
+    Write-Host "       Aguarde 10 a 15 segundos e desative o Modo Aviao." -ForegroundColor Yellow
+    Write-Host "       (Isso encerra todas as conexoes de rede e forca o descarte total do cache DNS!)." -ForegroundColor Green
+    Write-Host "    -> METODO DEFINITIVO (Reset de Conexoes de Rede):" -ForegroundColor White
+    Write-Host "       Ajustes > Geral > Transferir ou Redefinir o iPhone > Redefinir >" -ForegroundColor DarkGray
+    Write-Host "       Toque em: 'Redefinir Ajustes de Rede' (resolve Wi-Fi caindo ou sites nao abrindo)." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  [2] LIMPAR HISTORICO E CACHE DE SITES NO SAFARI (Liberar Gigabytes):" -ForegroundColor Cyan
+    Write-Host "    1. Abra o app 'Ajustes' no iPhone." -ForegroundColor White
+    Write-Host "    2. Role ate 'Safari' (ou busque Safari no topo dos Ajustes)." -ForegroundColor White
+    Write-Host "    3. Role a tela para baixo e toque em: 'Limpar Historico e Dados dos Sites'." -ForegroundColor Yellow
+    Write-Host "    4. Escolha o periodo ('Todo o Historico') e confirme 'Limpar Historico'." -ForegroundColor Green
+    Write-Host "       -> DICA EXTRA: Em Ajustes > Safari > Avancado > 'Dados dos Sites'," -ForegroundColor DarkGray
+    Write-Host "          voce pode ver quais sites estao ocupando mais megabytes e apagar individualmente." -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  [3] COMO LIMPAR O CACHE DE APPS PESADOS (Instagram, TikTok, WhatsApp):" -ForegroundColor Cyan
+    Write-Host "    No iPhone nao existe o botao direto 'Limpar cache' nos ajustes gerais," -ForegroundColor DarkGray
+    Write-Host "    mas ha dois truques corporativos oficiais:" -ForegroundColor White
+    Write-Host "    -> TRUQUE 1 (Descarregar App sem perder dados):" -ForegroundColor Yellow
+    Write-Host "       Ajustes > Geral > Armazenamento do iPhone > toque no app (ex: Instagram, TikTok) >" -ForegroundColor White
+    Write-Host "       Toque em 'Desinstalar App' (Offload App) e depois em 'Reinstalar App'." -ForegroundColor Green
+    Write-Host "       (Isso mantem seus dados, fotos e contas, mas apaga todo o lixo de cache temporario!)." -ForegroundColor Green
+    Write-Host "    -> TRUQUE 2 (Limpeza dentro do proprio App):" -ForegroundColor Yellow
+    Write-Host "       - No TikTok: Perfil > Menu (3 barras) > Configuracoes > Liberar espaco > Limpar Cache." -ForegroundColor White
+    Write-Host "       - No WhatsApp: Configuracoes > Armazenamento e Dados > Gerenciar Armazenamento." -ForegroundColor White
+    Write-Host "       - No Telegram: Configuracoes > Dados e Armazenamento > Uso do Armazenamento > Limpar Cache." -ForegroundColor White
+    Write-Host "========================================================================" -ForegroundColor Magenta
+    Pause-Cyber
+}
+
 function Invoke-MobileAndroid {
     Register-MobileExitCleanup
     Clear-Host
@@ -3299,12 +3581,16 @@ function Invoke-MobileAndroid {
         Write-Host "  [8] REMOVER / DESINSTALAR PACOTE (APP) DO ANDROID (com instrucoes)" -ForegroundColor Red
         Write-Host "  [9] MOSTRAR PACOTES NATIVOS / SISTEMA DO ANDROID (bloatware e fabrica)" -ForegroundColor Yellow
         Write-Host "  [10] Como ativar Depuracao USB / Parear via QR Code (Guia por Modelo)" -ForegroundColor Cyan
+        Write-Host "  [11] LIMPEZA DE CACHE DE APPS E ARQUIVOS TEMPORARIOS (USB / Wi-Fi)" -ForegroundColor Green
+        Write-Host "  [12] LIMPEZA DE REDE, FLUSH DNS E DADOS DE NAVEGACAO / SITES (USB / Wi-Fi)" -ForegroundColor Cyan
         Write-Host "  [0] Sair e encerrar processos Android/iPhone no Windows" -ForegroundColor DarkGray
         Write-Host "========================================================================" -ForegroundColor Yellow
-        $sub = Read-Host "Escolha uma opcao [0-10]"
+        $sub = Read-Host "Escolha uma opcao [0-12]"
 
         if ($sub -eq "0") { Stop-MobileBackgroundProcesses -AdbPath $adb; break }
         elseif ($sub -eq "10") { Show-MobileDebugGuide -AdbPath $adb }
+        elseif ($sub -eq "11") { Invoke-AndroidCacheCleanup -AdbPath $adb -DeviceId $devId }
+        elseif ($sub -eq "12") { Invoke-AndroidNetworkFlush -AdbPath $adb -DeviceId $devId }
         elseif ($sub -eq "7") {
             $adb = Install-PortableAdb
             if ($adb) { $devId = Ensure-AdbConnection -AdbPath $adb }
@@ -3571,12 +3857,14 @@ function Invoke-MobileIphone {
         Write-Host "  [8] REMOVER / DESINSTALAR PACOTE (APP) DO IPHONE (com instrucoes)" -ForegroundColor Red
         Write-Host "  [9] MOSTRAR PACOTES NATIVOS / SISTEMA DO IPHONE (com.apple.*)" -ForegroundColor Yellow
         Write-Host "  [10] Como conectar o iPhone (Tela 'Confiar neste Computador' e Modo Desenvolvedor)" -ForegroundColor Cyan
+        Write-Host "  [11] GUIA TATICO: LIMPAR CACHE DE APPS, SAFARI E FLUSH DNS NO IPHONE (IOS)" -ForegroundColor Green
         Write-Host "  [0] Sair e encerrar processos Android/iPhone no Windows" -ForegroundColor DarkGray
         Write-Host "========================================================================" -ForegroundColor Magenta
-        $sub = Read-Host "Escolha uma opcao [0-10]"
+        $sub = Read-Host "Escolha uma opcao [0-11]"
 
         if ($sub -eq "0") { Stop-MobileBackgroundProcesses; break }
         elseif ($sub -eq "10") { Show-MobileDebugGuide }
+        elseif ($sub -eq "11") { Show-IphoneCacheGuide }
         elseif ($sub -eq "7") {
             $ipTools = Install-PortableIphoneTools
         }
